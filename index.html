@@ -1,10 +1,344 @@
 <!DOCTYPE html>
-<html>
-  <head>
-    <meta charset="utf-8">
-    <title>Hello，GitHub</title>
-  </head>
-  <body>
-    <h1>Test Github.io</h1>
-  </body>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mr. Lin (林先生) - 資深軟體工程師</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', 'Microsoft JhengHei', Arial, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 20px;
+            overflow: hidden;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+        }
+
+        .header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 60px 40px;
+            text-align: center;
+        }
+
+        .header h1 {
+            font-size: 3em;
+            margin-bottom: 10px;
+            font-weight: 700;
+        }
+
+        .header .subtitle {
+            font-size: 1.5em;
+            opacity: 0.95;
+            margin-bottom: 30px;
+        }
+
+        .contact-info {
+            display: flex;
+            justify-content: center;
+            gap: 30px;
+            flex-wrap: wrap;
+            margin-top: 20px;
+        }
+
+        .contact-item {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 1em;
+        }
+
+        .main-content {
+            display: grid;
+            grid-template-columns: 1fr 2fr;
+            gap: 40px;
+            padding: 50px 40px;
+        }
+
+        .sidebar {
+            border-right: 2px solid #f0f0f0;
+            padding-right: 40px;
+        }
+
+        .section {
+            margin-bottom: 40px;
+        }
+
+        .section-title {
+            font-size: 1.5em;
+            color: #667eea;
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 3px solid #667eea;
+            font-weight: 600;
+        }
+
+        .skill-tag {
+            display: inline-block;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 8px 16px;
+            margin: 5px;
+            border-radius: 20px;
+            font-size: 0.9em;
+        }
+
+        .experience-item, .education-item {
+            margin-bottom: 30px;
+            padding-bottom: 30px;
+            border-bottom: 1px solid #e0e0e0;
+        }
+
+        .experience-item:last-child, .education-item:last-child {
+            border-bottom: none;
+        }
+
+        .job-title {
+            font-size: 1.3em;
+            font-weight: 600;
+            color: #333;
+            margin-bottom: 5px;
+        }
+
+        .company {
+            font-size: 1.1em;
+            color: #667eea;
+            font-weight: 500;
+            margin-bottom: 5px;
+        }
+
+        .duration {
+            color: #666;
+            font-size: 0.9em;
+            margin-bottom: 15px;
+        }
+
+        .description {
+            margin-top: 10px;
+        }
+
+        .description li {
+            margin-bottom: 10px;
+            margin-left: 20px;
+            color: #555;
+        }
+
+        .profile-intro {
+            background: #f8f9ff;
+            padding: 20px;
+            border-radius: 10px;
+            margin-bottom: 30px;
+        }
+
+        .profile-intro li {
+            margin-bottom: 10px;
+            margin-left: 20px;
+            color: #555;
+        }
+
+        .language-item, .hobby-item {
+            margin-bottom: 15px;
+            padding: 10px;
+            background: #f8f9ff;
+            border-radius: 8px;
+        }
+
+        .language-level {
+            color: #667eea;
+            font-weight: 500;
+            font-size: 0.9em;
+        }
+
+        .hobbies-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 10px;
+        }
+
+        @media (max-width: 768px) {
+            .main-content {
+                grid-template-columns: 1fr;
+            }
+
+            .sidebar {
+                border-right: none;
+                border-bottom: 2px solid #f0f0f0;
+                padding-right: 0;
+                padding-bottom: 40px;
+            }
+
+            .header h1 {
+                font-size: 2em;
+            }
+
+            .header .subtitle {
+                font-size: 1.2em;
+            }
+
+            .contact-info {
+                flex-direction: column;
+                gap: 15px;
+            }
+
+            .hobbies-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .degree {
+            font-weight: 600;
+            color: #333;
+            font-size: 1.1em;
+        }
+
+        .school {
+            color: #667eea;
+            font-weight: 500;
+            margin-top: 5px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header class="header">
+            <h1>Mr. Lin</h1>
+            <div class="subtitle">林先生 | 資深軟體工程師</div>
+            <div class="contact-info">
+                <div class="contact-item">
+                    <span>📍</span>
+                    <span>台南市安南區</span>
+                </div>
+                <div class="contact-item">
+                    <span>📧</span>
+                    <span>mosful@gmail.com</span>
+                </div>
+                <div class="contact-item">
+                    <span>📱</span>
+                    <span>+886-919-633-120</span>
+                </div>
+            </div>
+        </header>
+
+        <div class="main-content">
+            <aside class="sidebar">
+                <section class="section">
+                    <h2 class="section-title">專業技能</h2>
+                    <div>
+                        <span class="skill-tag">Oracle ERP</span>
+                        <span class="skill-tag">D2K</span>
+                        <span class="skill-tag">PL/SQL</span>
+                        <span class="skill-tag">MS SQL</span>
+                        <span class="skill-tag">C#</span>
+                        <span class="skill-tag">ASP.Net</span>
+                        <span class="skill-tag">MVC</span>
+                        <span class="skill-tag">TIPTOP ERP</span>
+                        <span class="skill-tag">4GL</span>
+                        <span class="skill-tag">Python</span>
+                    </div>
+                </section>
+
+                <section class="section">
+                    <h2 class="section-title">語言能力</h2>
+                    <div class="language-item">
+                        <strong>中文</strong>
+                        <div class="language-level">母語</div>
+                    </div>
+                    <div class="language-item">
+                        <strong>English</strong>
+                        <div class="language-level">B1 Intermediate (中級)</div>
+                    </div>
+                </section>
+
+                <section class="section">
+                    <h2 class="section-title">興趣愛好</h2>
+                    <div class="hobbies-grid">
+                        <div class="hobby-item">🏔️ 爬山</div>
+                        <div class="hobby-item">📚 閱讀</div>
+                        <div class="hobby-item">🏃 跑步</div>
+                        <div class="hobby-item">🚗 開車</div>
+                    </div>
+                </section>
+
+                <section class="section">
+                    <h2 class="section-title">學歷</h2>
+                    <div class="education-item">
+                        <div class="degree">工業與資訊管理學系 碩士</div>
+                        <div class="school">國立成功大學</div>
+                        <div class="duration">台南 | 2015年畢業</div>
+                    </div>
+                    <div class="education-item">
+                        <div class="degree">資訊管理學系 學士</div>
+                        <div class="school">義守大學</div>
+                        <div class="duration">高雄 | 2005年畢業</div>
+                    </div>
+                </section>
+            </aside>
+
+            <main>
+                <section class="section">
+                    <h2 class="section-title">個人特質</h2>
+                    <div class="profile-intro">
+                        <ul>
+                            <li>對工作熱情、當責，能站在團隊、公司立場，做出最佳貢獻</li>
+                            <li>邏輯清晰，具換位思考能力，擅長溝通合作，簡化複雜概念</li>
+                        </ul>
+                    </div>
+                </section>
+
+                <section class="section">
+                    <h2 class="section-title">工作經歷</h2>
+                    
+                    <div class="experience-item">
+                        <div class="job-title">資深工程師</div>
+                        <div class="company">友達光電 (AUO)</div>
+                        <div class="duration">台南 | 2015年12月 - 現在</div>
+                        <ul class="description">
+                            <li>開發異常流程警示平台，供稽核人員查看及分析公司內部異常訊息</li>
+                            <li>開發製造成本分析平台，協同外部顧問以ABC作業成本法則開發計算成本模型，提供給經管、廠端及工程整合等人員查看及分析製費成本</li>
+                            <li>開發資料收集平台，管理資料源並進行前置處理作業。因流程複雜，負責橫跨多廠區、多單位溝通協調，在期限內完成交付以及產出成本報表</li>
+                            <li>承接BU CFT期間負責平台維運事宜，包含權限管理與權限稽核、工作排程管理、樣板與共用程式管理，供BU所有流程子系統使用</li>
+                            <li>承接ESH CFT期間負責環安通報開發與維運事宜，將人員受傷、天災與公共能源等異常訊息即時透過手機簡訊、App推播等方式，快速提供精確訊息通知各廠相關人員與高階主管</li>
+                        </ul>
+                    </div>
+
+                    <div class="experience-item">
+                        <div class="job-title">工程師</div>
+                        <div class="company">可成科技</div>
+                        <div class="duration">台南 | 2014年5月 - 2015年11月</div>
+                        <ul class="description">
+                            <li>開發公司新建模具廠相關生產系統，從料號基本資料、BOM、排程生產，直到庫存盤點與月結，瞭解並熟悉整個生產流程</li>
+                            <li>主責開發與維運ERP相關模組，包含生產製造模組、庫存、盤點、BOM等</li>
+                            <li>擔任新進人員教育訓練資訊安全講師</li>
+                            <li>擔任公司內部稽核員</li>
+                        </ul>
+                    </div>
+
+                    <div class="experience-item">
+                        <div class="job-title">管理師</div>
+                        <div class="company">燁輝企業</div>
+                        <div class="duration">高雄 | 2009年12月 - 2014年5月</div>
+                        <ul class="description">
+                            <li>完成利用庫存品找出潛在客戶模型開發，利用資料探勘分類技術分析客戶過去的訂單類型，試著找出相對可符合客戶需求的現有庫存品，幫助去化庫存10%</li>
+                            <li>開發以及維運ERP生產製造模組</li>
+                        </ul>
+                    </div>
+                </section>
+            </main>
+        </div>
+    </div>
+</body>
 </html>
