@@ -26,6 +26,38 @@
             border-radius: 20px;
             overflow: hidden;
             box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+            position: relative;
+        }
+
+        .lang-switch {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            z-index: 100;
+            display: flex;
+            gap: 10px;
+        }
+
+        .lang-btn {
+            background: rgba(255, 255, 255, 0.2);
+            color: white;
+            border: 2px solid white;
+            padding: 8px 16px;
+            border-radius: 20px;
+            cursor: pointer;
+            font-size: 0.9em;
+            font-weight: 600;
+            transition: all 0.3s;
+        }
+
+        .lang-btn:hover {
+            background: white;
+            color: #2c3e50;
+        }
+
+        .lang-btn.active {
+            background: white;
+            color: #2c3e50;
         }
 
         .header {
@@ -216,6 +248,11 @@
             .hobbies-grid {
                 grid-template-columns: 1fr;
             }
+
+            .lang-switch {
+                top: 10px;
+                right: 10px;
+            }
         }
 
         .degree {
@@ -229,149 +266,329 @@
             font-weight: 500;
             margin-top: 5px;
         }
+
+        .content-zh, .content-en {
+            display: none;
+        }
+
+        .content-zh.active, .content-en.active {
+            display: block;
+        }
     </style>
 </head>
 <body>
     <div class="container">
-        <header class="header">
-            <h1>Mr. Lin</h1>
-            <div class="subtitle">林先生 | 資深軟體工程師</div>
-            <div class="contact-info">
-                <div class="contact-item">
-                    <span>📍</span>
-                    <span>台南市安南區</span>
+        <div class="lang-switch">
+            <button class="lang-btn active" onclick="switchLang('zh')">中文</button>
+            <button class="lang-btn" onclick="switchLang('en')">English</button>
+        </div>
+
+        <!-- 中文版 -->
+        <div class="content-zh active">
+            <header class="header">
+                <h1>Mr. Lin</h1>
+                <div class="subtitle">林先生 | 資深軟體工程師</div>
+                <div class="contact-info">
+                    <div class="contact-item">
+                        <span>📍</span>
+                        <span>台南市安南區</span>
+                    </div>
+                    <div class="contact-item">
+                        <span>📧</span>
+                        <span>mosful@gmail.com</span>
+                    </div>
+                    <div class="contact-item">
+                        <span>📱</span>
+                        <span>+886-919-633-120</span>
+                    </div>
                 </div>
-                <div class="contact-item">
-                    <span>📧</span>
-                    <span>mosful@gmail.com</span>
-                </div>
-                <div class="contact-item">
-                    <span>📱</span>
-                    <span>+886-919-633-120</span>
-                </div>
+            </header>
+
+            <div class="main-content">
+                <aside class="sidebar">
+                    <section class="section">
+                        <h2 class="section-title">專業技能</h2>
+                        <div>
+                            <span class="skill-tag">Oracle ERP</span>
+                            <span class="skill-tag">D2K</span>
+                            <span class="skill-tag">PL/SQL</span>
+                            <span class="skill-tag">MS SQL</span>
+                            <span class="skill-tag">C#</span>
+                            <span class="skill-tag">ASP.Net</span>
+                            <span class="skill-tag">.Net Core</span>
+                            <span class="skill-tag">MVC</span>
+                            <span class="skill-tag">Azure</span>
+                            <span class="skill-tag">TIPTOP ERP</span>
+                            <span class="skill-tag">4GL</span>
+                            <span class="skill-tag">Python</span>
+                        </div>
+                    </section>
+
+                    <section class="section">
+                        <h2 class="section-title">語言能力</h2>
+                        <div class="language-item">
+                            <strong>中文</strong>
+                            <div class="language-level">母語</div>
+                        </div>
+                        <div class="language-item">
+                            <strong>English</strong>
+                            <div class="language-level">B1 Intermediate (中級)</div>
+                        </div>
+                    </section>
+
+                    <section class="section">
+                        <h2 class="section-title">興趣愛好</h2>
+                        <div class="hobbies-grid">
+                            <div class="hobby-item">🏔️ 爬山</div>
+                            <div class="hobby-item">📚 閱讀</div>
+                            <div class="hobby-item">🏃 跑步</div>
+                            <div class="hobby-item">🚗 開車</div>
+                        </div>
+                    </section>
+
+                    <section class="section">
+                        <h2 class="section-title">學歷</h2>
+                        <div class="education-item">
+                            <div class="degree">工業與資訊管理學系 碩士</div>
+                            <div class="school">國立成功大學</div>
+                            <div class="duration">台南 | 2015年畢業</div>
+                        </div>
+                        <div class="education-item">
+                            <div class="degree">資訊管理學系 學士</div>
+                            <div class="school">義守大學</div>
+                            <div class="duration">高雄 | 2005年畢業</div>
+                        </div>
+                    </section>
+
+                    <section class="section">
+                        <h2 class="section-title">專業證照</h2>
+                        <div class="certificate-item">
+                            <strong>🏥 BLS 基本救命術</strong>
+                            <small>Basic Life Support</small>
+                        </div>
+                        <div class="certificate-item">
+                            <strong>📻 業餘無線電人員執照</strong>
+                            <small>三等</small>
+                        </div>
+                    </section>
+                </aside>
+
+                <main>
+                    <section class="section">
+                        <h2 class="section-title">個人特質</h2>
+                        <div class="profile-intro">
+                            <ul>
+                                <li>對工作熱情、當責，能站在團隊、公司立場，做出最佳貢獻</li>
+                                <li>邏輯清晰，具換位思考能力，擅長溝通合作，簡化複雜概念</li>
+                            </ul>
+                        </div>
+                    </section>
+
+                    <section class="section">
+                        <h2 class="section-title">工作經歷</h2>
+                        
+                        <div class="experience-item">
+                            <div class="job-title">資深工程師</div>
+                            <div class="company">友達光電 (AUO)</div>
+                            <div class="duration">台南 | 2015年12月 - 現在</div>
+                            <ul class="description">
+                                <li>開發異常流程警示平台，供稽核人員查看及分析公司內部異常訊息</li>
+                                <li>開發製造成本分析平台，協同外部顧問以ABC作業成本法則開發計算成本模型，提供給經管、廠端及工程整合等人員查看及分析製費成本</li>
+                                <li>開發資料收集平台，管理資料源並進行前置處理作業。因流程複雜，負責橫跨多廠區、多單位溝通協調，在期限內完成交付以及產出成本報表</li>
+                                <li>承接BU CFT期間負責平台維運事宜，包含權限管理與權限稽核、工作排程管理、樣板與共用程式管理，供BU所有流程子系統使用</li>
+                                <li>承接ESH CFT期間負責環安通報開發與維運事宜，將人員受傷、天災與公共能源等異常訊息即時透過手機簡訊、App推播等方式，快速提供精確訊息通知各廠相關人員與高階主管</li>
+                            </ul>
+                        </div>
+
+                        <div class="experience-item">
+                            <div class="job-title">工程師</div>
+                            <div class="company">可成科技</div>
+                            <div class="duration">台南 | 2014年5月 - 2015年11月</div>
+                            <ul class="description">
+                                <li>開發公司新建模具廠相關生產系統，從料號基本資料、BOM、排程生產，直到庫存盤點與月結，瞭解並熟悉整個生產流程</li>
+                                <li>主責開發與維運ERP相關模組，包含生產製造模組、庫存、盤點、BOM等</li>
+                                <li>擔任新進人員教育訓練資訊安全講師</li>
+                                <li>擔任公司內部稽核員</li>
+                            </ul>
+                        </div>
+
+                        <div class="experience-item">
+                            <div class="job-title">管理師</div>
+                            <div class="company">燁輝企業</div>
+                            <div class="duration">高雄 | 2009年12月 - 2014年5月</div>
+                            <ul class="description">
+                                <li>完成利用庫存品找出潛在客戶模型開發，利用資料探勘分類技術分析客戶過去的訂單類型，試著找出相對可符合客戶需求的現有庫存品，幫助去化庫存10%</li>
+                                <li>開發以及維運ERP生產製造模組</li>
+                            </ul>
+                        </div>
+                    </section>
+                </main>
             </div>
-        </header>
+        </div>
 
-        <div class="main-content">
-            <aside class="sidebar">
-                <section class="section">
-                    <h2 class="section-title">專業技能</h2>
-                    <div>
-                        <span class="skill-tag">Oracle ERP</span>
-                        <span class="skill-tag">D2K</span>
-                        <span class="skill-tag">PL/SQL</span>
-                        <span class="skill-tag">MS SQL</span>
-                        <span class="skill-tag">C#</span>
-                        <span class="skill-tag">ASP.Net</span>
-                        <span class="skill-tag">.Net Core</span>
-                        <span class="skill-tag">MVC</span>
-                        <span class="skill-tag">Azure</span>
-                        <span class="skill-tag">TIPTOP ERP</span>
-                        <span class="skill-tag">4GL</span>
-                        <span class="skill-tag">Python</span>
+        <!-- 英文版 -->
+        <div class="content-en">
+            <header class="header">
+                <h1>Mr. Lin</h1>
+                <div class="subtitle">Senior Software Engineer</div>
+                <div class="contact-info">
+                    <div class="contact-item">
+                        <span>📍</span>
+                        <span>Annan District, Tainan City</span>
                     </div>
-                </section>
+                    <div class="contact-item">
+                        <span>📧</span>
+                        <span>mosful@gmail.com</span>
+                    </div>
+                    <div class="contact-item">
+                        <span>📱</span>
+                        <span>+886-919-633-120</span>
+                    </div>
+                </div>
+            </header>
 
-                <section class="section">
-                    <h2 class="section-title">語言能力</h2>
-                    <div class="language-item">
-                        <strong>中文</strong>
-                        <div class="language-level">母語</div>
-                    </div>
-                    <div class="language-item">
-                        <strong>English</strong>
-                        <div class="language-level">B1 Intermediate (中級)</div>
-                    </div>
-                </section>
+            <div class="main-content">
+                <aside class="sidebar">
+                    <section class="section">
+                        <h2 class="section-title">Skills</h2>
+                        <div>
+                            <span class="skill-tag">Oracle ERP</span>
+                            <span class="skill-tag">D2K</span>
+                            <span class="skill-tag">PL/SQL</span>
+                            <span class="skill-tag">MS SQL</span>
+                            <span class="skill-tag">C#</span>
+                            <span class="skill-tag">ASP.Net</span>
+                            <span class="skill-tag">.Net Core</span>
+                            <span class="skill-tag">MVC</span>
+                            <span class="skill-tag">Azure</span>
+                            <span class="skill-tag">TIPTOP ERP</span>
+                            <span class="skill-tag">4GL</span>
+                            <span class="skill-tag">Python</span>
+                        </div>
+                    </section>
 
-                <section class="section">
-                    <h2 class="section-title">興趣愛好</h2>
-                    <div class="hobbies-grid">
-                        <div class="hobby-item">🏔️ 爬山</div>
-                        <div class="hobby-item">📚 閱讀</div>
-                        <div class="hobby-item">🏃 跑步</div>
-                        <div class="hobby-item">🚗 開車</div>
-                    </div>
-                </section>
+                    <section class="section">
+                        <h2 class="section-title">Languages</h2>
+                        <div class="language-item">
+                            <strong>Chinese</strong>
+                            <div class="language-level">Native</div>
+                        </div>
+                        <div class="language-item">
+                            <strong>English</strong>
+                            <div class="language-level">B1 Intermediate</div>
+                        </div>
+                    </section>
 
-                <section class="section">
-                    <h2 class="section-title">學歷</h2>
-                    <div class="education-item">
-                        <div class="degree">工業與資訊管理學系 碩士</div>
-                        <div class="school">國立成功大學</div>
-                        <div class="duration">台南 | 2015年畢業</div>
-                    </div>
-                    <div class="education-item">
-                        <div class="degree">資訊管理學系 學士</div>
-                        <div class="school">義守大學</div>
-                        <div class="duration">高雄 | 2005年畢業</div>
-                    </div>
-                </section>
+                    <section class="section">
+                        <h2 class="section-title">Hobbies</h2>
+                        <div class="hobbies-grid">
+                            <div class="hobby-item">🏔️ Hiking</div>
+                            <div class="hobby-item">📚 Reading</div>
+                            <div class="hobby-item">🏃 Running</div>
+                            <div class="hobby-item">🚗 Driving</div>
+                        </div>
+                    </section>
 
-                <section class="section">
-                    <h2 class="section-title">專業證照</h2>
-                    <div class="certificate-item">
-                        <strong>🏥 BLS 基本救命術</strong>
-                        <small>Basic Life Support</small>
-                    </div>
-                    <div class="certificate-item">
-                        <strong>📻 業餘無線電人員執照</strong>
-                        <small>三等</small>
-                    </div>
-                </section>
-            </aside>
+                    <section class="section">
+                        <h2 class="section-title">Education</h2>
+                        <div class="education-item">
+                            <div class="degree">MS, Industrial and Information Management</div>
+                            <div class="school">National Cheng Kung University</div>
+                            <div class="duration">Tainan | 2015</div>
+                        </div>
+                        <div class="education-item">
+                            <div class="degree">BA, Information Management</div>
+                            <div class="school">I-Shou University</div>
+                            <div class="duration">Kaohsiung | 2005</div>
+                        </div>
+                    </section>
 
-            <main>
-                <section class="section">
-                    <h2 class="section-title">個人特質</h2>
-                    <div class="profile-intro">
-                        <ul>
-                            <li>對工作熱情、當責，能站在團隊、公司立場，做出最佳貢獻</li>
-                            <li>邏輯清晰，具換位思考能力，擅長溝通合作，簡化複雜概念</li>
-                        </ul>
-                    </div>
-                </section>
+                    <section class="section">
+                        <h2 class="section-title">Certifications</h2>
+                        <div class="certificate-item">
+                            <strong>🏥 BLS</strong>
+                            <small>Basic Life Support</small>
+                        </div>
+                        <div class="certificate-item">
+                            <strong>📻 Amateur Radio License</strong>
+                            <small>Class 3</small>
+                        </div>
+                    </section>
+                </aside>
 
-                <section class="section">
-                    <h2 class="section-title">工作經歷</h2>
-                    
-                    <div class="experience-item">
-                        <div class="job-title">資深工程師</div>
-                        <div class="company">友達光電 (AUO)</div>
-                        <div class="duration">台南 | 2015年12月 - 現在</div>
-                        <ul class="description">
-                            <li>開發異常流程警示平台，供稽核人員查看及分析公司內部異常訊息</li>
-                            <li>開發製造成本分析平台，協同外部顧問以ABC作業成本法則開發計算成本模型，提供給經管、廠端及工程整合等人員查看及分析製費成本</li>
-                            <li>開發資料收集平台，管理資料源並進行前置處理作業。因流程複雜，負責橫跨多廠區、多單位溝通協調，在期限內完成交付以及產出成本報表</li>
-                            <li>承接BU CFT期間負責平台維運事宜，包含權限管理與權限稽核、工作排程管理、樣板與共用程式管理，供BU所有流程子系統使用</li>
-                            <li>承接ESH CFT期間負責環安通報開發與維運事宜，將人員受傷、天災與公共能源等異常訊息即時透過手機簡訊、App推播等方式，快速提供精確訊息通知各廠相關人員與高階主管</li>
-                        </ul>
-                    </div>
+                <main>
+                    <section class="section">
+                        <h2 class="section-title">Profile</h2>
+                        <div class="profile-intro">
+                            <ul>
+                                <li>Passionate and responsible at work, able to contribute from team and company perspective</li>
+                                <li>Clear logical thinking with empathy, good at communication and teamwork, skilled in simplifying complex concepts</li>
+                            </ul>
+                        </div>
+                    </section>
 
-                    <div class="experience-item">
-                        <div class="job-title">工程師</div>
-                        <div class="company">可成科技</div>
-                        <div class="duration">台南 | 2014年5月 - 2015年11月</div>
-                        <ul class="description">
-                            <li>開發公司新建模具廠相關生產系統，從料號基本資料、BOM、排程生產，直到庫存盤點與月結，瞭解並熟悉整個生產流程</li>
-                            <li>主責開發與維運ERP相關模組，包含生產製造模組、庫存、盤點、BOM等</li>
-                            <li>擔任新進人員教育訓練資訊安全講師</li>
-                            <li>擔任公司內部稽核員</li>
-                        </ul>
-                    </div>
+                    <section class="section">
+                        <h2 class="section-title">Experience</h2>
+                        
+                        <div class="experience-item">
+                            <div class="job-title">Senior Engineer</div>
+                            <div class="company">AUO Company</div>
+                            <div class="duration">Tainan | Dec 2015 - Present</div>
+                            <ul class="description">
+                                <li>Developed exception alert platform for auditors to review and analyze internal system anomalies</li>
+                                <li>Developed manufacturing cost analysis platform, collaborated with external consultants to build ABC costing model for management and engineering teams</li>
+                                <li>Developed data collection platform for source management and preprocessing. Coordinated cross-site and cross-department communication to deliver cost reports on schedule</li>
+                                <li>Managed BU CFT platform operations including access control, audit, job scheduling, template and shared code management for all BU subsystems</li>
+                                <li>Developed and maintained ESH CFT safety alert system, delivering real-time notifications via SMS and app push for incidents including injuries, disasters and utility issues to relevant personnel and executives</li>
+                            </ul>
+                        </div>
 
-                    <div class="experience-item">
-                        <div class="job-title">管理師</div>
-                        <div class="company">燁輝企業</div>
-                        <div class="duration">高雄 | 2009年12月 - 2014年5月</div>
-                        <ul class="description">
-                            <li>完成利用庫存品找出潛在客戶模型開發，利用資料探勘分類技術分析客戶過去的訂單類型，試著找出相對可符合客戶需求的現有庫存品，幫助去化庫存10%</li>
-                            <li>開發以及維運ERP生產製造模組</li>
-                        </ul>
-                    </div>
-                </section>
-            </main>
+                        <div class="experience-item">
+                            <div class="job-title">Engineer</div>
+                            <div class="company">Catcher Technology</div>
+                            <div class="duration">Tainan | May 2014 - Nov 2015</div>
+                            <ul class="description">
+                                <li>Developed production system for new mold factory covering item master data, BOM, production scheduling, inventory and month-end closing</li>
+                                <li>Developed and maintained ERP modules including manufacturing, inventory, stock count and BOM</li>
+                                <li>Served as information security instructor for new employee training</li>
+                                <li>Served as internal auditor</li>
+                            </ul>
+                        </div>
+
+                        <div class="experience-item">
+                            <div class="job-title">Manager</div>
+                            <div class="company">Yieh Phui Enterprise</div>
+                            <div class="duration">Kaohsiung | Dec 2009 - May 2014</div>
+                            <ul class="description">
+                                <li>Developed customer recommendation model using inventory data and data mining techniques to analyze order patterns, helping reduce inventory by 10%</li>
+                                <li>Developed and maintained ERP manufacturing modules</li>
+                            </ul>
+                        </div>
+                    </section>
+                </main>
+            </div>
         </div>
     </div>
+
+    <script>
+        function switchLang(lang) {
+            const zhContent = document.querySelector('.content-zh');
+            const enContent = document.querySelector('.content-en');
+            const zhBtn = document.querySelectorAll('.lang-btn')[0];
+            const enBtn = document.querySelectorAll('.lang-btn')[1];
+
+            if (lang === 'zh') {
+                zhContent.classList.add('active');
+                enContent.classList.remove('active');
+                zhBtn.classList.add('active');
+                enBtn.classList.remove('active');
+            } else {
+                enContent.classList.add('active');
+                zhContent.classList.remove('active');
+                enBtn.classList.add('active');
+                zhBtn.classList.remove('active');
+            }
+        }
+    </script>
 </body>
 </html>
