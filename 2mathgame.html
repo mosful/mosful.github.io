@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>大耳狗九九乘法：挑戰版</title>
+    <title>大耳狗九九乘法：可愛挑戰版</title>
     <style>
         /* --- 全局設定 --- */
         :root {
@@ -51,17 +51,26 @@
             flex-direction: column;
         }
 
-        h1 { color: var(--dark-blue); margin: 5px 0; font-size: 1.6rem; }
+        h1 { color: var(--dark-blue); margin: 10px 0 5px 0; font-size: 1.8rem; }
 
+        /* 圖片圓框樣式 */
         .character-img {
-            width: 110px;
-            height: 110px;
-            object-fit: cover;
+            width: 130px; /* 稍微加大一點首頁圖 */
+            height: 130px;
+            object-fit: cover; /* 確保圖片填滿圓框且不變形 */
             border-radius: 50%;
-            border: 3px solid var(--accent-pink);
+            border: 4px solid var(--primary-blue); /* 改成藍色邊框比較搭這張圖 */
             margin: 0 auto 10px auto;
-            background-color: #eee;
+            background-color: #F0F8FF;
             display: block;
+            box-shadow: 0 5px 15px rgba(137, 207, 240, 0.3);
+        }
+        
+        /* 遊戲中的小圖維持原本大小 */
+        #game-img, #report-img {
+             width: 110px;
+             height: 110px;
+             border-color: var(--accent-pink);
         }
 
         /* --- 畫面切換控制 --- */
@@ -229,13 +238,6 @@
             font-weight: bold;
             color: var(--primary-blue);
         }
-        .big-score {
-            font-size: 3rem;
-            color: #FF9800;
-            font-weight: bold;
-            display: block;
-            margin: 10px 0;
-        }
 
         /* --- 按鈕 --- */
         .btn { background-color: var(--primary-blue); color: white; border: none; padding: 10px; font-size: 1.3rem; border-radius: 50px; cursor: pointer; box-shadow: 0 4px 0 #5CA0C0; }
@@ -258,7 +260,7 @@
     <div id="game-container">
         
         <div id="menu-screen" class="screen active">
-            <img src="https://placehold.co/150x150/89CFF0/FFFFFF?text=Menu" alt="大耳狗" class="character-img" id="menu-img">
+            <img src="menu_cinnamoroll.png" alt="大耳狗飛翔" class="character-img" id="menu-img">
             <h1>大耳狗九九乘法</h1>
             
             <div class="switch-container">
@@ -323,7 +325,7 @@
 
     <script>
         // --- 設定與資源 ---
-        const QUESTIONS_PER_ROUND = 10; // 每一回合固定 10 題
+        const QUESTIONS_PER_ROUND = 10; 
         
         const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
         function playSound(type) {
@@ -351,9 +353,10 @@
         }
 
         const IMAGES = {
-            normal: "https://placehold.co/150x150/89CFF0/FFFFFF?text=Hello",
-            happy: "https://placehold.co/150x150/98FB98/FFFFFF?text=Happy!",
-            sad: "https://placehold.co/150x150/FFB7C5/FFFFFF?text=Oh+No",
+            // 這裡設定遊戲中的圖片，您也可以替換成其他大耳狗圖片
+            normal: "https://placehold.co/150x150/89CFF0/FFFFFF?text=Thinking",
+            happy: "https://placehold.co/150x150/98FB98/FFFFFF?text=Correct!",
+            sad: "https://placehold.co/150x150/FFB7C5/FFFFFF?text=Try+Again",
             finish: "https://placehold.co/150x150/FFD700/FFFFFF?text=Winner"
         };
 
@@ -417,7 +420,7 @@
             targetNum: 0,
             isTimerEnabled: false,
             
-            qIndex: 0,       // 目前是第幾題 (1-based for display, but logic uses 0)
+            qIndex: 0,       // 目前是第幾題
             correctCount: 0, // 答對題數
             wrongCount: 0,   // 答錯次數
             
@@ -426,7 +429,7 @@
             currentQ: null,
             history: [],
             
-            lastMultiplicand: -1 // 避免重複題目用的紀錄 (記錄上一次的被乘數)
+            lastMultiplicand: -1 // 避免重複題目用的紀錄
         };
 
         // --- 頁面控制 ---
@@ -437,7 +440,7 @@
 
         function goHome() {
             showScreen('menu-screen');
-            document.getElementById('menu-img').src = IMAGES.normal;
+            document.getElementById('menu-img').src = "menu_cinnamoroll.png"; // 回首頁顯示飛翔圖
         }
 
         function initGame(mode, num) {
