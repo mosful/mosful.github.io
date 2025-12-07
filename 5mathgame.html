@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>快樂火車數學大冒險</title>
+    <title>快樂火車數學大冒險 (5分鐘版)</title>
     <style>
         /* --- 1. 全域設定 --- */
         body {
@@ -30,12 +30,11 @@
             border: 6px solid #4DD0E1;
             position: relative;
             overflow: hidden;
-            display: flex;       /* 讓內部元素可以排列 */
+            display: flex;
             flex-direction: column;
-            min-height: 550px;   /* 固定最小高度，確保版面穩定 */
+            min-height: 550px;
         }
 
-        /* 內容區域自動撐開 */
         .content-wrapper {
             flex-grow: 1; 
             display: flex;
@@ -161,13 +160,13 @@
             0% { transform: translateX(0); } 25% { transform: translateX(-10px); } 50% { transform: translateX(10px); } 75% { transform: translateX(-10px); } 100% { transform: translateX(0); }
         }
 
-        /* --- 8. 底部規則提醒 (新增樣式) --- */
+        /* --- 8. 底部規則提醒 --- */
         .rules-footer {
             margin-top: 20px;
             border-top: 2px solid #EEE;
             padding-top: 15px;
-            font-size: 0.8rem; /* 字體偏小 */
-            color: #90A4AE;    /* 淡灰色，不明顯 */
+            font-size: 0.8rem;
+            color: #90A4AE;
             line-height: 1.6;
         }
 
@@ -193,7 +192,7 @@
                 <h1>快樂火車<br>數學大冒險</h1>
                 <p style="font-size: 1.2rem; color: #666; margin-bottom: 30px;">
                     小小站長，準備好出發了嗎？<br>
-                    <small>挑戰 60 秒拿高分！</small>
+                    <small>挑戰 5 分鐘拿高分！</small>
                 </p>
                 <button class="btn" onclick="startGame('normal')">🧮 運算挑戰 (一般)</button>
                 <br>
@@ -203,7 +202,7 @@
             <div id="game-screen">
                 <div class="info-bar">
                     <span>⭐ 分數: <span id="score" style="color:#D84315;">0</span></span>
-                    <span>⏱️ 時間: <span id="timer">60</span>s</span>
+                    <span>⏱️ 時間: <span id="timer">300</span>s</span>
                 </div>
                 
                 <div id="question-text" class="question-box">
@@ -237,7 +236,8 @@
 
     <script>
         // --- 變數與音效 ---
-        let score = 0, timeLeft = 60, timerInterval, currentAnswer = 0, gameMode = 'normal', isAnswering = false;
+        // 修改點 3：timeLeft 預設變數其實在 startGame 會被覆蓋，但這裡也建議改一下
+        let score = 0, timeLeft = 300, timerInterval, currentAnswer = 0, gameMode = 'normal', isAnswering = false;
         const sounds = {
             train: document.getElementById('sound-train'),
             correct: document.getElementById('sound-correct'),
@@ -261,12 +261,16 @@
 
         // --- 流程控制 ---
         function startGame(mode) {
-            gameMode = mode; score = 0; timeLeft = 300;
+            gameMode = mode; 
+            score = 0; 
+            // 修改點 4：設定遊戲時間為 300 秒 (5分鐘)
+            timeLeft = 300; 
+            
             document.getElementById('score').innerText = score;
             document.getElementById('timer').innerText = timeLeft;
             document.getElementById('start-screen').style.display = 'none';
             document.getElementById('game-screen').style.display = 'block';
-            document.querySelector('.rules-footer').style.display = 'none'; // 遊戲中隱藏規則，讓畫面更乾淨
+            document.querySelector('.rules-footer').style.display = 'none'; 
             playSound('train');
 
             timerInterval = setInterval(() => {
@@ -283,7 +287,7 @@
             clearInterval(timerInterval);
             document.getElementById('game-screen').style.display = 'none';
             document.getElementById('result-screen').style.display = 'block';
-            document.querySelector('.rules-footer').style.display = 'block'; // 結束後顯示回來
+            document.querySelector('.rules-footer').style.display = 'block';
             document.getElementById('final-score').innerText = score;
             if(score > 0) playSound('correct'); else playSound('train');
         }
@@ -403,5 +407,4 @@
         function toSymbol(op) { if (op === '*') return '×'; if (op === '/') return '÷'; return op; }
     </script>
 </body>
-
 </html>
