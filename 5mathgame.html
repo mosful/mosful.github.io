@@ -261,7 +261,7 @@
 
         // --- 流程控制 ---
         function startGame(mode) {
-            gameMode = mode; score = 0; timeLeft = 60;
+            gameMode = mode; score = 0; timeLeft = 300;
             document.getElementById('score').innerText = score;
             document.getElementById('timer').innerText = timeLeft;
             document.getElementById('start-screen').style.display = 'none';
@@ -403,4 +403,5 @@
         function toSymbol(op) { if (op === '*') return '×'; if (op === '/') return '÷'; return op; }
     </script>
 </body>
+
 </html>
