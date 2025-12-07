@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>大耳狗九九乘法：50題特訓版</title>
+    <title>大耳狗九九乘法：挑戰版</title>
     <style>
         /* --- 全局設定 --- */
         :root {
@@ -34,11 +34,11 @@
             user-select: none;
         }
 
-        /* --- 遊戲主容器 --- */
+        /* --- 主容器 --- */
         #game-container {
             background: var(--soft-white);
             width: 95%;
-            max-width: 650px; /*稍微加寬以容納文字*/
+            max-width: 600px;
             border-radius: 30px;
             box-shadow: 0 10px 25px rgba(137, 207, 240, 0.5);
             padding: 20px;
@@ -46,17 +46,16 @@
             border: 6px solid var(--primary-blue);
             box-sizing: border-box;
             position: relative;
-            height: 95vh; /* 佔滿畫面 */
+            min-height: 90vh;
             display: flex;
             flex-direction: column;
         }
 
-        /* --- 通用 UI --- */
         h1 { color: var(--dark-blue); margin: 5px 0; font-size: 1.6rem; }
 
         .character-img {
-            width: 100px;
-            height: 100px;
+            width: 110px;
+            height: 110px;
             object-fit: cover;
             border-radius: 50%;
             border: 3px solid var(--accent-pink);
@@ -65,15 +64,11 @@
             display: block;
         }
 
+        /* --- 畫面切換控制 --- */
+        .screen { display: none; flex-direction: column; height: 100%; flex-grow: 1; }
+        .screen.active { display: flex; }
+
         /* --- 選單畫面 --- */
-        #menu-screen {
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            flex-grow: 1;
-            overflow-y: auto;
-        }
-        
         .mode-section {
             margin: 10px 0;
             padding: 15px;
@@ -88,9 +83,52 @@
             gap: 8px;
         }
 
-        /* --- 遊戲畫面 --- */
-        #game-screen { display: none; flex-direction: column; height: 100%; }
+        /* --- 開關按鈕 (Switch) --- */
+        .switch-container {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 10px;
+            font-size: 1.2rem;
+            color: var(--dark-blue);
+            font-weight: bold;
+        }
+        
+        .toggle-switch {
+            position: relative;
+            display: inline-block;
+            width: 60px;
+            height: 34px;
+            margin-right: 10px;
+        }
+        
+        .toggle-switch input { opacity: 0; width: 0; height: 0; }
+        
+        .slider {
+            position: absolute;
+            cursor: pointer;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background-color: #ccc;
+            transition: .4s;
+            border-radius: 34px;
+        }
+        
+        .slider:before {
+            position: absolute;
+            content: "";
+            height: 26px;
+            width: 26px;
+            left: 4px;
+            bottom: 4px;
+            background-color: white;
+            transition: .4s;
+            border-radius: 50%;
+        }
+        
+        input:checked + .slider { background-color: var(--primary-blue); }
+        input:checked + .slider:before { transform: translateX(26px); }
 
+        /* --- 遊戲畫面 --- */
         .top-bar {
             display: flex;
             justify-content: space-between;
@@ -99,70 +137,52 @@
             flex-shrink: 0;
         }
 
-        .timer-badge {
+        .info-badge {
             font-size: 1.1rem;
-            color: #E65100;
             background: #FFF3E0;
-            padding: 5px 10px;
+            padding: 5px 12px;
             border-radius: 15px;
             border: 2px solid #FFCC80;
             font-weight: bold;
+            color: #E65100;
         }
 
-        /* --- 題目顯示區 (關鍵修改) --- */
         #question-area {
             flex-grow: 1;
             display: flex;
             justify-content: center;
             align-items: center;
-            overflow-y: auto; /* 防止文字過多溢出 */
-            margin: 5px 0;
+            margin: 10px 0;
         }
 
-        /* 基礎數字題樣式 */
         .question-box-basic {
-            font-size: 4rem;
+            font-size: 4.5rem;
             color: var(--text-color);
             font-weight: bold;
         }
 
-        /* 素養題文字樣式 (包含注音) */
+        /* 素養題樣式 */
         .story-text {
-            font-size: 1.3rem;
+            font-size: 1.4rem;
             color: #333;
             text-align: left;
             background: #fff;
             padding: 15px;
             border-radius: 15px;
-            line-height: 1.8; /* 行距拉大 */
+            line-height: 1.8;
             border: 2px solid var(--primary-blue);
             width: 100%;
             box-sizing: border-box;
-            word-break: break-all;
         }
+        .zhu { color: #888; font-size: 0.8em; margin-right: 2px; font-weight: normal; }
+        .highlight { color: #E91E63; font-weight: bold; font-size: 1.5rem; margin: 0 3px; }
 
-        /* 注音樣式 (灰色小字) */
-        .zhu {
-            color: #888;
-            font-size: 0.85em; /* 比國字稍小 */
-            margin-right: 2px;
-            font-weight: normal;
-        }
-        
-        /* 數字強調 */
-        .highlight {
-            color: #E91E63;
-            font-weight: bold;
-            font-size: 1.4rem;
-            margin: 0 3px;
-        }
-
-        /* --- 四選一按鈕區 --- */
+        /* --- 選項區 --- */
         .options-grid {
             display: grid;
             grid-template-columns: 1fr 1fr;
-            gap: 10px;
-            margin-top: auto; /* 推到底部 */
+            gap: 12px;
+            margin-top: auto;
             margin-bottom: 10px;
             flex-shrink: 0;
         }
@@ -172,7 +192,7 @@
             border: 3px solid var(--primary-blue);
             border-radius: 20px;
             color: var(--dark-blue);
-            font-size: 2rem;
+            font-size: 2.2rem;
             padding: 15px 0;
             cursor: pointer;
             box-shadow: 0 4px 0 #B0E0E6;
@@ -180,53 +200,55 @@
             font-weight: bold;
         }
 
-        .option-btn:active {
-            transform: translateY(4px);
-            box-shadow: 0 1px 0 #B0E0E6;
+        .option-btn:active { transform: translateY(4px); box-shadow: 0 1px 0 #B0E0E6; }
+        .option-btn.wrong-anim { background-color: #FFEBEE; border-color: var(--wrong-red); color: var(--wrong-red); animation: shake 0.5s; }
+        .option-btn.correct-anim { background-color: #E8F5E9; border-color: var(--correct-green); color: var(--correct-green); }
+
+        /* --- 結算畫面 (Report) --- */
+        #report-screen {
+            text-align: center;
+            padding-top: 20px;
+        }
+        .result-box {
+            background: #fff;
+            padding: 20px;
+            border-radius: 20px;
+            border: 4px solid var(--primary-blue);
+            margin: 20px 0;
+        }
+        .result-item {
+            font-size: 1.5rem;
+            margin: 15px 0;
+            color: #555;
+            text-align: left;
+            border-bottom: 1px dashed #ddd;
+            padding-bottom: 10px;
+        }
+        .result-value {
+            float: right;
+            font-weight: bold;
+            color: var(--primary-blue);
+        }
+        .big-score {
+            font-size: 3rem;
+            color: #FF9800;
+            font-weight: bold;
+            display: block;
+            margin: 10px 0;
         }
 
-        .option-btn.wrong-anim {
-            background-color: #FFEBEE;
-            border-color: var(--wrong-red);
-            color: var(--wrong-red);
-            animation: shake 0.5s;
-        }
-
-        .option-btn.correct-anim {
-            background-color: #E8F5E9;
-            border-color: var(--correct-green);
-            color: var(--correct-green);
-        }
-
-        /* --- 按鈕與回饋 --- */
-        .btn {
-            background-color: var(--primary-blue);
-            color: white;
-            border: none;
-            padding: 10px;
-            font-size: 1.2rem;
-            border-radius: 50px;
-            cursor: pointer;
-            box-shadow: 0 4px 0 #5CA0C0;
-        }
+        /* --- 按鈕 --- */
+        .btn { background-color: var(--primary-blue); color: white; border: none; padding: 10px; font-size: 1.3rem; border-radius: 50px; cursor: pointer; box-shadow: 0 4px 0 #5CA0C0; }
         .btn:active { transform: translateY(4px); box-shadow: none; }
-        .btn-menu { width: 100%; font-size: 1.4rem; padding: 12px; margin: 5px 0; }
+        .btn-menu { width: 100%; margin: 5px 0; }
         .btn-back { background: #FFD54F; box-shadow: 0 4px 0 #FFB300; color: #333; font-size: 1rem; padding: 8px 15px;}
         .btn-home { background: #ccc; box-shadow: 0 4px 0 #999; font-size: 1rem; padding: 8px 15px;}
+        .btn-restart { background-color: #4CAF50; box-shadow: 0 4px 0 #2E7D32; width: 100%; margin-top: 20px; padding: 15px;}
 
         @keyframes shake {
             0%, 100% { transform: translateX(0); }
             25%, 75% { transform: translateX(-5px); }
             50% { transform: translateX(5px); }
-        }
-
-        #feedback-area {
-            height: 30px;
-            font-size: 1.1rem;
-            font-weight: bold;
-            color: var(--primary-blue);
-            margin: 5px 0;
-            flex-shrink: 0;
         }
 
     </style>
@@ -235,35 +257,43 @@
 
     <div id="game-container">
         
-        <div id="menu-screen">
+        <div id="menu-screen" class="screen active">
             <img src="https://placehold.co/150x150/89CFF0/FFFFFF?text=Menu" alt="大耳狗" class="character-img" id="menu-img">
             <h1>大耳狗九九乘法</h1>
             
+            <div class="switch-container">
+                <label class="toggle-switch">
+                    <input type="checkbox" id="timer-toggle">
+                    <span class="slider"></span>
+                </label>
+                <span>開啟秒數挑戰</span>
+            </div>
+
             <div class="mode-section">
-                <h3>基礎練習：秒數挑戰</h3>
+                <h3>基礎練習 (每回10題)</h3>
                 <div class="grid-buttons-small">
-                    <button class="btn" onclick="startGame('basic', 2)">2</button>
-                    <button class="btn" onclick="startGame('basic', 3)">3</button>
-                    <button class="btn" onclick="startGame('basic', 4)">4</button>
-                    <button class="btn" onclick="startGame('basic', 5)">5</button>
-                    <button class="btn" onclick="startGame('basic', 6)">6</button>
-                    <button class="btn" onclick="startGame('basic', 7)">7</button>
-                    <button class="btn" onclick="startGame('basic', 8)">8</button>
-                    <button class="btn" onclick="startGame('basic', 9)">9</button>
+                    <button class="btn" onclick="initGame('basic', 2)">2</button>
+                    <button class="btn" onclick="initGame('basic', 3)">3</button>
+                    <button class="btn" onclick="initGame('basic', 4)">4</button>
+                    <button class="btn" onclick="initGame('basic', 5)">5</button>
+                    <button class="btn" onclick="initGame('basic', 6)">6</button>
+                    <button class="btn" onclick="initGame('basic', 7)">7</button>
+                    <button class="btn" onclick="initGame('basic', 8)">8</button>
+                    <button class="btn" onclick="initGame('basic', 9)">9</button>
                 </div>
-                <button class="btn btn-menu" style="margin-top:10px;" onclick="startGame('basic', 0)">全部混合挑戰</button>
+                <button class="btn btn-menu" style="margin-top:10px;" onclick="initGame('basic', 0)">全部混合練習</button>
             </div>
 
             <div class="mode-section" style="border-color: #FFB7C5;">
-                <h3>進階挑戰：50題素養題</h3>
-                <button class="btn btn-menu" style="background-color: #FF9800; box-shadow: 0 4px 0 #E65100;" onclick="startGame('story', 0)">開始閱讀挑戰</button>
+                <h3>進階挑戰 (50題題庫)</h3>
+                <button class="btn btn-menu" style="background-color: #FF9800; box-shadow: 0 4px 0 #E65100;" onclick="initGame('story', 0)">素養閱讀挑戰</button>
             </div>
         </div>
 
-        <div id="game-screen">
+        <div id="game-screen" class="screen">
             <div class="top-bar">
                 <button class="btn btn-back" id="btn-undo" onclick="undoLast()">↩ 上一題</button>
-                <div id="timer-display" class="timer-badge">⏱️ 0.0 秒</div>
+                <div id="status-display" class="info-badge">第 1 / 10 題</div>
                 <button class="btn btn-home" onclick="goHome()">🏠</button>
             </div>
 
@@ -271,15 +301,30 @@
             
             <div id="question-area"></div>
             
-            <div id="feedback-area"></div>
+            <div id="feedback-area" style="height:30px; font-weight:bold; color:var(--primary-blue); margin:5px 0;"></div>
 
             <div id="options-area" class="options-grid"></div>
+        </div>
+
+        <div id="report-screen" class="screen">
+            <img src="https://placehold.co/150x150/98FB98/FFFFFF?text=Good+Job" alt="好棒" class="character-img" id="report-img">
+            <h1 style="font-size: 2rem; color: #E65100;">挑戰完成！</h1>
+            
+            <div class="result-box">
+                <div class="result-item">答對題數 <span class="result-value" id="res-correct" style="color:#4CAF50">10</span></div>
+                <div class="result-item">答錯次數 <span class="result-value" id="res-wrong" style="color:#FF6B6B">0</span></div>
+                <div class="result-item" id="res-time-row">總共花費 <span class="result-value" id="res-time">0 秒</span></div>
+            </div>
+
+            <button class="btn btn-restart" onclick="goHome()">再玩一次</button>
         </div>
 
     </div>
 
     <script>
-        // 音效 (Web Audio API)
+        // --- 設定與資源 ---
+        const QUESTIONS_PER_ROUND = 10; // 每一回合固定 10 題
+        
         const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
         function playSound(type) {
             if (audioCtx.state === 'suspended') audioCtx.resume();
@@ -305,16 +350,14 @@
             }
         }
 
-        // 圖片
         const IMAGES = {
             normal: "https://placehold.co/150x150/89CFF0/FFFFFF?text=Hello",
             happy: "https://placehold.co/150x150/98FB98/FFFFFF?text=Happy!",
-            sad: "https://placehold.co/150x150/FFB7C5/FFFFFF?text=Oh+No"
+            sad: "https://placehold.co/150x150/FFB7C5/FFFFFF?text=Oh+No",
+            finish: "https://placehold.co/150x150/FFD700/FFFFFF?text=Winner"
         };
 
-        // --- 50題素養題庫 (國字+注音並列格式) ---
-        // 格式說明: t: 題目文字, a: 答案
-        // 為了閱讀方便，注音已經直接排版在國字旁邊，例如：一(ㄧ)
+        // --- 50題素養題 (國字+注音) ---
         const storyQuestions = [
             { t: "一(ㄧˋ) 隻(ㄓ) 大(ㄉㄚˋ) 耳(ㄦˇ) 狗(ㄍㄡˇ) 有(ㄧㄡˇ) <span class='highlight'>2</span> 隻(ㄓ) 耳(ㄦˇ) 朵(ㄉㄨㄛ˙) ， <span class='highlight'>6</span> 隻(ㄓ) 大(ㄉㄚˋ) 耳(ㄦˇ) 狗(ㄍㄡˇ) 共(ㄍㄨㄥˋ) 有(ㄧㄡˇ) 幾(ㄐㄧˇ) 隻(ㄓ) 耳(ㄦˇ) 朵(ㄉㄨㄛ˙) ？", a: 12 },
             { t: "腳(ㄐㄧㄠˇ) 踏(ㄊㄚˋ) 車(ㄔㄜ) 有(ㄧㄡˇ) <span class='highlight'>2</span> 個(ㄍㄜ˙) 輪(ㄌㄨㄣˊ) 子(ㄗ˙) ， <span class='highlight'>9</span> 輛(ㄌㄧㄤˋ) 腳(ㄐㄧㄠˇ) 踏(ㄊㄚˋ) 車(ㄔㄜ) 共(ㄍㄨㄥˋ) 有(ㄧㄡˇ) 幾(ㄐㄧˇ) 個(ㄍㄜ˙) 輪(ㄌㄨㄣˊ) 子(ㄗ˙) ？", a: 18 },
@@ -368,64 +411,125 @@
             { t: "橡(ㄒㄧㄤˋ) 皮(ㄆㄧˊ) 擦(ㄘㄚ) <span class='highlight'>4</span> 元(ㄩㄢˊ) ， 買(ㄇㄞˇ) <span class='highlight'>8</span> 個(ㄍㄜ˙) 要(ㄧㄠˋ) 付(ㄈㄨˋ) 多(ㄉㄨㄛ) 少(ㄕㄠˇ) 元(ㄩㄢˊ) ？", a: 32 }
         ];
 
-        // --- 變數 ---
+        // --- 遊戲狀態變數 ---
         let state = {
             mode: 'basic',
             targetNum: 0,
+            isTimerEnabled: false,
+            
+            qIndex: 0,       // 目前是第幾題 (1-based for display, but logic uses 0)
+            correctCount: 0, // 答對題數
+            wrongCount: 0,   // 答錯次數
+            
+            startTime: 0,    // 總開始時間
+            
             currentQ: null,
             history: [],
-            startTime: 0,
-            timerInterval: null
+            
+            lastMultiplicand: -1 // 避免重複題目用的紀錄 (記錄上一次的被乘數)
         };
 
-        function goHome() {
-            clearInterval(state.timerInterval);
-            document.getElementById('game-screen').style.display = 'none';
-            document.getElementById('menu-screen').style.display = 'flex';
+        // --- 頁面控制 ---
+        function showScreen(id) {
+            document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+            document.getElementById(id).classList.add('active');
         }
 
-        function startGame(mode, num) {
+        function goHome() {
+            showScreen('menu-screen');
+            document.getElementById('menu-img').src = IMAGES.normal;
+        }
+
+        function initGame(mode, num) {
+            // 讀取 Switch 狀態
+            const timerSwitch = document.getElementById('timer-toggle');
+            state.isTimerEnabled = timerSwitch.checked;
+
             state.mode = mode;
             state.targetNum = num;
+            state.qIndex = 0;
+            state.correctCount = 0;
+            state.wrongCount = 0;
             state.history = [];
+            state.lastMultiplicand = -1; // 重置重複檢查
             
-            document.getElementById('menu-screen').style.display = 'none';
-            document.getElementById('game-screen').style.display = 'flex';
+            state.startTime = Date.now(); // 紀錄開始時間
             
+            showScreen('game-screen');
             nextQuestion(false);
         }
 
         function nextQuestion(isUndo) {
-            if (!isUndo && state.currentQ) {
-                state.history.push({...state.currentQ});
+            // 檢查是否結束 (10題)
+            if (!isUndo && state.qIndex >= QUESTIONS_PER_ROUND) {
+                showReport();
+                return;
             }
 
             if (!isUndo) {
+                state.qIndex++; 
                 state.currentQ = generateQuestionData();
+                state.history.push({...state.currentQ}); // 存檔
             }
 
+            updateStatusDisplay();
             renderGame();
-            startTimer();
         }
 
+        function undoLast() {
+            if (state.history.length <= 1) return; // 至少要有一題才能退
+            // 退回到上一題
+            state.history.pop(); // 移除當前
+            const prev = state.history[state.history.length - 1]; // 拿取上一個
+            state.currentQ = prev;
+            state.qIndex--; // 題號倒退
+            updateStatusDisplay();
+            renderGame();
+        }
+
+        function updateStatusDisplay() {
+            const display = document.getElementById('status-display');
+            // 顯示當前題數
+            if (state.isTimerEnabled) {
+                display.innerText = `第 ${state.qIndex} / ${QUESTIONS_PER_ROUND} 題 (計時中)`;
+                display.style.color = "#E65100";
+                display.style.borderColor = "#FFCC80";
+                display.style.background = "#FFF3E0";
+            } else {
+                display.innerText = `第 ${state.qIndex} / ${QUESTIONS_PER_ROUND} 題`;
+                display.style.color = "#555";
+                display.style.borderColor = "#ccc";
+                display.style.background = "#eee";
+            }
+        }
+
+        // --- 題目生成邏輯 (重點修改) ---
         function generateQuestionData() {
             let qText, qAns, options;
             
             if (state.mode === 'story') {
                 const q = storyQuestions[Math.floor(Math.random() * storyQuestions.length)];
-                qText = q.t;
+                qText = q.t.replace(/\(([^)]+)\)/g, "<span class='zhu'>$1</span>");
                 qAns = q.a;
-                // 將題目中的(注音)用span包起來，變成灰色小字
-                qText = qText.replace(/\(([^)]+)\)/g, "<span class='zhu'>$1</span>");
             } else {
+                // 基礎題邏輯
                 let n1, n2;
                 if (state.targetNum === 0) {
+                    // 全隨機
                     n1 = Math.floor(Math.random() * 8) + 2; 
                     n2 = Math.floor(Math.random() * 9) + 1;
                 } else {
+                    // 指定數字 (例如 3)
                     n1 = state.targetNum;
-                    n2 = Math.floor(Math.random() * 9) + 1;
+                    
+                    // 防止重複出題邏輯
+                    do {
+                        n2 = Math.floor(Math.random() * 9) + 1; // 1~9
+                    } while (n2 === state.lastMultiplicand); // 如果跟上次一樣就重選
+                    
+                    state.lastMultiplicand = n2; // 紀錄這次的數字
                 }
+                
                 qText = `${n1} × ${n2} = ?`;
                 qAns = n1 * n2;
             }
@@ -445,31 +549,16 @@
             return Array.from(opts).sort(() => Math.random() - 0.5);
         }
 
-        function startTimer() {
-            clearInterval(state.timerInterval);
-            state.startTime = Date.now();
-            document.getElementById('timer-display').innerText = "⏱️ 0.0 秒";
-            document.getElementById('feedback-area').innerText = "";
-            
-            if (state.mode === 'basic') {
-                state.timerInterval = setInterval(() => {
-                    let now = Date.now();
-                    let seconds = ((now - state.startTime) / 1000).toFixed(1);
-                    document.getElementById('timer-display').innerText = `⏱️ ${seconds} 秒`;
-                }, 100);
-            } else {
-                document.getElementById('timer-display').innerText = "閱讀挑戰"; 
-            }
-        }
-
         function renderGame() {
             const qArea = document.getElementById('question-area');
             const optArea = document.getElementById('options-area');
             const img = document.getElementById('game-img');
             const undoBtn = document.getElementById('btn-undo');
+            const feedback = document.getElementById('feedback-area');
 
             img.src = IMAGES.normal;
-            undoBtn.disabled = (state.history.length === 0);
+            undoBtn.disabled = (state.qIndex <= 1);
+            feedback.innerText = ""; // 清空回饋
 
             if (state.currentQ.type === 'story') {
                 qArea.innerHTML = `<div class='story-text'>${state.currentQ.text}</div>`;
@@ -488,45 +577,55 @@
         }
 
         function checkAnswer(selectedVal, btnElement) {
-            clearInterval(state.timerInterval);
-            const timeTaken = ((Date.now() - state.startTime) / 1000).toFixed(1);
-            const feedback = document.getElementById('feedback-area');
             const img = document.getElementById('game-img');
+            const feedback = document.getElementById('feedback-area');
 
             if (selectedVal === state.currentQ.ans) {
+                // 答對
                 playSound('correct');
                 btnElement.classList.add('correct-anim');
                 img.src = IMAGES.happy;
                 
-                if (state.mode === 'basic') {
-                    feedback.innerText = `答對了！耗時 ${timeTaken} 秒`;
-                } else {
-                    feedback.innerText = "好棒喔！答對了！";
-                }
+                state.correctCount++;
+                feedback.innerText = "答對了！";
                 
-                disableAllButtons();
-                setTimeout(() => nextQuestion(false), 1500);
+                // 鎖定所有按鈕
+                const btns = document.querySelectorAll('.option-btn');
+                btns.forEach(b => b.disabled = true);
+                
+                setTimeout(() => nextQuestion(false), 1000); // 1秒後下一題
+
             } else {
+                // 答錯
                 playSound('wrong');
                 btnElement.classList.add('wrong-anim');
                 img.src = IMAGES.sad;
                 feedback.innerText = "再試試看！";
+                
+                state.wrongCount++;
+                // 這裡選擇不跳下一題，讓小朋友繼續試直到答對
             }
         }
 
-        function disableAllButtons() {
-            const btns = document.querySelectorAll('.option-btn');
-            btns.forEach(b => b.disabled = true);
+        // --- 結算報告 ---
+        function showReport() {
+            showScreen('report-screen');
+            document.getElementById('report-img').src = IMAGES.finish;
+            
+            // 顯示答對答錯 (因為機制是必須答對才下一題，所以答對一定是10，重點是答錯次數)
+            document.getElementById('res-correct').innerText = state.correctCount + " 題"; // 這裡其實就是總題數
+            document.getElementById('res-wrong').innerText = state.wrongCount + " 次";
+
+            const timeRow = document.getElementById('res-time-row');
+            if (state.isTimerEnabled) {
+                const totalSeconds = ((Date.now() - state.startTime) / 1000).toFixed(1);
+                document.getElementById('res-time').innerText = totalSeconds + " 秒";
+                timeRow.style.display = 'block';
+            } else {
+                timeRow.style.display = 'none';
+            }
         }
 
-        function undoLast() {
-            if (state.history.length === 0) return;
-            const prev = state.history.pop();
-            state.currentQ = prev;
-            renderGame(); // 重繪但不重新計時或可選重置
-            // 這裡簡單處理：回到上一題狀態，允許重答
-            startTimer(); 
-        }
     </script>
 </body>
 </html>
