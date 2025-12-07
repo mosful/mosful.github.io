@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>大耳狗九九乘法：可愛挑戰版</title>
+    <title>大耳狗九九乘法：完整練習版</title>
     <style>
         /* --- 全局設定 --- */
         :root {
@@ -55,18 +55,17 @@
 
         /* 圖片圓框樣式 */
         .character-img {
-            width: 130px; /* 稍微加大一點首頁圖 */
+            width: 130px;
             height: 130px;
-            object-fit: cover; /* 確保圖片填滿圓框且不變形 */
+            object-fit: cover;
             border-radius: 50%;
-            border: 4px solid var(--primary-blue); /* 改成藍色邊框比較搭這張圖 */
+            border: 4px solid var(--primary-blue);
             margin: 0 auto 10px auto;
             background-color: #F0F8FF;
             display: block;
             box-shadow: 0 5px 15px rgba(137, 207, 240, 0.3);
         }
         
-        /* 遊戲中的小圖維持原本大小 */
         #game-img, #report-img {
              width: 110px;
              height: 110px;
@@ -170,7 +169,6 @@
             font-weight: bold;
         }
 
-        /* 素養題樣式 */
         .story-text {
             font-size: 1.4rem;
             color: #333;
@@ -213,7 +211,7 @@
         .option-btn.wrong-anim { background-color: #FFEBEE; border-color: var(--wrong-red); color: var(--wrong-red); animation: shake 0.5s; }
         .option-btn.correct-anim { background-color: #E8F5E9; border-color: var(--correct-green); color: var(--correct-green); }
 
-        /* --- 結算畫面 (Report) --- */
+        /* --- 結算畫面 --- */
         #report-screen {
             text-align: center;
             padding-top: 20px;
@@ -272,7 +270,7 @@
             </div>
 
             <div class="mode-section">
-                <h3>基礎練習 (每回10題)</h3>
+                <h3>基礎練習 (每回10題不重複)</h3>
                 <div class="grid-buttons-small">
                     <button class="btn" onclick="initGame('basic', 2)">2</button>
                     <button class="btn" onclick="initGame('basic', 3)">3</button>
@@ -324,9 +322,9 @@
     </div>
 
     <script>
-        // --- 設定與資源 ---
         const QUESTIONS_PER_ROUND = 10; 
         
+        // 音效設定
         const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
         function playSound(type) {
             if (audioCtx.state === 'suspended') audioCtx.resume();
@@ -353,14 +351,13 @@
         }
 
         const IMAGES = {
-            // 這裡設定遊戲中的圖片，您也可以替換成其他大耳狗圖片
             normal: "https://placehold.co/150x150/89CFF0/FFFFFF?text=Thinking",
             happy: "https://placehold.co/150x150/98FB98/FFFFFF?text=Correct!",
             sad: "https://placehold.co/150x150/FFB7C5/FFFFFF?text=Try+Again",
             finish: "https://placehold.co/150x150/FFD700/FFFFFF?text=Winner"
         };
 
-        // --- 50題素養題 (國字+注音) ---
+        // 50題素養題
         const storyQuestions = [
             { t: "一(ㄧˋ) 隻(ㄓ) 大(ㄉㄚˋ) 耳(ㄦˇ) 狗(ㄍㄡˇ) 有(ㄧㄡˇ) <span class='highlight'>2</span> 隻(ㄓ) 耳(ㄦˇ) 朵(ㄉㄨㄛ˙) ， <span class='highlight'>6</span> 隻(ㄓ) 大(ㄉㄚˋ) 耳(ㄦˇ) 狗(ㄍㄡˇ) 共(ㄍㄨㄥˋ) 有(ㄧㄡˇ) 幾(ㄐㄧˇ) 隻(ㄓ) 耳(ㄦˇ) 朵(ㄉㄨㄛ˙) ？", a: 12 },
             { t: "腳(ㄐㄧㄠˇ) 踏(ㄊㄚˋ) 車(ㄔㄜ) 有(ㄧㄡˇ) <span class='highlight'>2</span> 個(ㄍㄜ˙) 輪(ㄌㄨㄣˊ) 子(ㄗ˙) ， <span class='highlight'>9</span> 輛(ㄌㄧㄤˋ) 腳(ㄐㄧㄠˇ) 踏(ㄊㄚˋ) 車(ㄔㄜ) 共(ㄍㄨㄥˋ) 有(ㄧㄡˇ) 幾(ㄐㄧˇ) 個(ㄍㄜ˙) 輪(ㄌㄨㄣˊ) 子(ㄗ˙) ？", a: 18 },
@@ -414,25 +411,20 @@
             { t: "橡(ㄒㄧㄤˋ) 皮(ㄆㄧˊ) 擦(ㄘㄚ) <span class='highlight'>4</span> 元(ㄩㄢˊ) ， 買(ㄇㄞˇ) <span class='highlight'>8</span> 個(ㄍㄜ˙) 要(ㄧㄠˋ) 付(ㄈㄨˋ) 多(ㄉㄨㄛ) 少(ㄕㄠˇ) 元(ㄩㄢˊ) ？", a: 32 }
         ];
 
-        // --- 遊戲狀態變數 ---
+        // 遊戲狀態
         let state = {
             mode: 'basic',
             targetNum: 0,
             isTimerEnabled: false,
-            
-            qIndex: 0,       // 目前是第幾題
-            correctCount: 0, // 答對題數
-            wrongCount: 0,   // 答錯次數
-            
-            startTime: 0,    // 總開始時間
-            
+            qIndex: 0,
+            correctCount: 0,
+            wrongCount: 0,
+            startTime: 0,
             currentQ: null,
             history: [],
-            
-            lastMultiplicand: -1 // 避免重複題目用的紀錄
+            questionQueue: [] // 儲存預先生成的題目佇列
         };
 
-        // --- 頁面控制 ---
         function showScreen(id) {
             document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
             document.getElementById(id).classList.add('active');
@@ -440,39 +432,110 @@
 
         function goHome() {
             showScreen('menu-screen');
-            document.getElementById('menu-img').src = "menu_cinnamoroll.png"; // 回首頁顯示飛翔圖
+            document.getElementById('menu-img').src = "menu_cinnamoroll.png"; 
         }
 
         function initGame(mode, num) {
-            // 讀取 Switch 狀態
             const timerSwitch = document.getElementById('timer-toggle');
             state.isTimerEnabled = timerSwitch.checked;
-
             state.mode = mode;
             state.targetNum = num;
             state.qIndex = 0;
             state.correctCount = 0;
             state.wrongCount = 0;
             state.history = [];
-            state.lastMultiplicand = -1; // 重置重複檢查
             
-            state.startTime = Date.now(); // 紀錄開始時間
-            
+            // 預先生成題目佇列
+            generateQuestionQueue(mode, num);
+
+            state.startTime = Date.now();
             showScreen('game-screen');
             nextQuestion(false);
         }
 
+        // 產生一回合的題目佇列
+        function generateQuestionQueue(mode, num) {
+            state.questionQueue = [];
+            
+            if (mode === 'basic') {
+                if (num > 0) {
+                    // 指定數字：產生 n*1 到 n*10
+                    let pool = [];
+                    for(let i=1; i<=10; i++) {
+                        pool.push({ n1: num, n2: i });
+                    }
+                    // 洗牌
+                    shuffleArray(pool);
+                    state.questionQueue = pool;
+                } else {
+                    // 混合練習：產生10題不重複的隨機題目
+                    let pool = [];
+                    let used = new Set();
+                    while(pool.length < 10) {
+                        let n1 = Math.floor(Math.random() * 8) + 2; // 2~9
+                        let n2 = Math.floor(Math.random() * 9) + 1; // 1~9
+                        let key = `${n1}-${n2}`;
+                        if (!used.has(key)) {
+                            used.add(key);
+                            pool.push({ n1: n1, n2: n2 });
+                        }
+                    }
+                    state.questionQueue = pool;
+                }
+            } else {
+                // 素養題：隨機抽10題 (簡單隨機，若要嚴格不重複也可加 Set)
+                // 這裡簡單從50題中隨機抽10題不重複
+                let indices = Array.from({length: storyQuestions.length}, (_, i) => i);
+                shuffleArray(indices);
+                let selectedIndices = indices.slice(0, 10);
+                state.questionQueue = selectedIndices.map(i => storyQuestions[i]);
+            }
+        }
+
+        function shuffleArray(array) {
+            for (let i = array.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [array[i], array[j]] = [array[j], array[i]];
+            }
+        }
+
         function nextQuestion(isUndo) {
-            // 檢查是否結束 (10題)
             if (!isUndo && state.qIndex >= QUESTIONS_PER_ROUND) {
                 showReport();
                 return;
             }
 
             if (!isUndo) {
-                state.qIndex++; 
-                state.currentQ = generateQuestionData();
-                state.history.push({...state.currentQ}); // 存檔
+                state.qIndex++;
+                
+                // 從佇列中取出題目
+                if (state.mode === 'story') {
+                    // 素養題佇列裡存的是完整題目物件
+                    // 但我們需要配合 generateQuestionData 的回傳格式，這裡做一點轉換
+                    let qData = state.questionQueue[state.qIndex - 1]; // 因為 qIndex 是從 1 開始顯示
+                    let qText = qData.t.replace(/\(([^)]+)\)/g, "<span class='zhu'>$1</span>");
+                    
+                    state.currentQ = { 
+                        text: qText, 
+                        ans: qData.a, 
+                        options: generateOptions(qData.a), 
+                        type: 'story' 
+                    };
+
+                } else {
+                    // 基礎題佇列裡存的是 {n1, n2}
+                    let qPair = state.questionQueue[state.qIndex - 1];
+                    let val = qPair.n1 * qPair.n2;
+                    
+                    state.currentQ = {
+                        text: `${qPair.n1} × ${qPair.n2} = ?`,
+                        ans: val,
+                        options: generateOptions(val),
+                        type: 'basic'
+                    };
+                }
+                
+                state.history.push({...state.currentQ});
             }
 
             updateStatusDisplay();
@@ -480,19 +543,17 @@
         }
 
         function undoLast() {
-            if (state.history.length <= 1) return; // 至少要有一題才能退
-            // 退回到上一題
-            state.history.pop(); // 移除當前
-            const prev = state.history[state.history.length - 1]; // 拿取上一個
+            if (state.history.length <= 1) return;
+            state.history.pop();
+            const prev = state.history[state.history.length - 1];
             state.currentQ = prev;
-            state.qIndex--; // 題號倒退
+            state.qIndex--; 
             updateStatusDisplay();
             renderGame();
         }
 
         function updateStatusDisplay() {
             const display = document.getElementById('status-display');
-            // 顯示當前題數
             if (state.isTimerEnabled) {
                 display.innerText = `第 ${state.qIndex} / ${QUESTIONS_PER_ROUND} 題 (計時中)`;
                 display.style.color = "#E65100";
@@ -504,41 +565,6 @@
                 display.style.borderColor = "#ccc";
                 display.style.background = "#eee";
             }
-        }
-
-        // --- 題目生成邏輯 (重點修改) ---
-        function generateQuestionData() {
-            let qText, qAns, options;
-            
-            if (state.mode === 'story') {
-                const q = storyQuestions[Math.floor(Math.random() * storyQuestions.length)];
-                qText = q.t.replace(/\(([^)]+)\)/g, "<span class='zhu'>$1</span>");
-                qAns = q.a;
-            } else {
-                // 基礎題邏輯
-                let n1, n2;
-                if (state.targetNum === 0) {
-                    // 全隨機
-                    n1 = Math.floor(Math.random() * 8) + 2; 
-                    n2 = Math.floor(Math.random() * 9) + 1;
-                } else {
-                    // 指定數字 (例如 3)
-                    n1 = state.targetNum;
-                    
-                    // 防止重複出題邏輯
-                    do {
-                        n2 = Math.floor(Math.random() * 9) + 1; // 1~9
-                    } while (n2 === state.lastMultiplicand); // 如果跟上次一樣就重選
-                    
-                    state.lastMultiplicand = n2; // 紀錄這次的數字
-                }
-                
-                qText = `${n1} × ${n2} = ?`;
-                qAns = n1 * n2;
-            }
-
-            options = generateOptions(qAns);
-            return { text: qText, ans: qAns, options: options, type: state.mode };
         }
 
         function generateOptions(correctAnswer) {
@@ -561,7 +587,7 @@
 
             img.src = IMAGES.normal;
             undoBtn.disabled = (state.qIndex <= 1);
-            feedback.innerText = ""; // 清空回饋
+            feedback.innerText = "";
 
             if (state.currentQ.type === 'story') {
                 qArea.innerHTML = `<div class='story-text'>${state.currentQ.text}</div>`;
@@ -584,7 +610,6 @@
             const feedback = document.getElementById('feedback-area');
 
             if (selectedVal === state.currentQ.ans) {
-                // 答對
                 playSound('correct');
                 btnElement.classList.add('correct-anim');
                 img.src = IMAGES.happy;
@@ -592,31 +617,25 @@
                 state.correctCount++;
                 feedback.innerText = "答對了！";
                 
-                // 鎖定所有按鈕
                 const btns = document.querySelectorAll('.option-btn');
                 btns.forEach(b => b.disabled = true);
                 
-                setTimeout(() => nextQuestion(false), 1000); // 1秒後下一題
+                setTimeout(() => nextQuestion(false), 1000);
 
             } else {
-                // 答錯
                 playSound('wrong');
                 btnElement.classList.add('wrong-anim');
                 img.src = IMAGES.sad;
                 feedback.innerText = "再試試看！";
-                
                 state.wrongCount++;
-                // 這裡選擇不跳下一題，讓小朋友繼續試直到答對
             }
         }
 
-        // --- 結算報告 ---
         function showReport() {
             showScreen('report-screen');
             document.getElementById('report-img').src = IMAGES.finish;
             
-            // 顯示答對答錯 (因為機制是必須答對才下一題，所以答對一定是10，重點是答錯次數)
-            document.getElementById('res-correct').innerText = state.correctCount + " 題"; // 這裡其實就是總題數
+            document.getElementById('res-correct').innerText = state.correctCount + " 題";
             document.getElementById('res-wrong').innerText = state.wrongCount + " 次";
 
             const timeRow = document.getElementById('res-time-row');
