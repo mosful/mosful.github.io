@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>大耳狗九九乘法：注音與挑戰版</title>
+    <title>大耳狗九九乘法：50題特訓版</title>
     <style>
         /* --- 全局設定 --- */
         :root {
@@ -11,14 +11,14 @@
             --dark-blue: #5CA0C0;
             --soft-white: #FFFFFF;
             --accent-pink: #FFB7C5;
-            --text-color: #555555;
+            --text-color: #444;
             --bg-cloud: #F0F8FF;
             --correct-green: #4CAF50;
             --wrong-red: #FF6B6B;
         }
 
         body {
-            font-family: "Varela Round", "Microsoft JhengHei", "BiauKai", sans-serif; /* 標楷體適合注音 */
+            font-family: "Microsoft JhengHei", "Heiti TC", sans-serif;
             background-color: var(--bg-cloud);
             margin: 0;
             padding: 0;
@@ -38,7 +38,7 @@
         #game-container {
             background: var(--soft-white);
             width: 95%;
-            max-width: 600px;
+            max-width: 650px; /*稍微加寬以容納文字*/
             border-radius: 30px;
             box-shadow: 0 10px 25px rgba(137, 207, 240, 0.5);
             padding: 20px;
@@ -46,21 +46,21 @@
             border: 6px solid var(--primary-blue);
             box-sizing: border-box;
             position: relative;
-            min-height: 90vh;
+            height: 95vh; /* 佔滿畫面 */
             display: flex;
             flex-direction: column;
         }
 
         /* --- 通用 UI --- */
-        h1 { color: var(--dark-blue); margin: 10px 0; font-size: 1.8rem; }
+        h1 { color: var(--dark-blue); margin: 5px 0; font-size: 1.6rem; }
 
         .character-img {
-            width: 120px;
-            height: 120px;
+            width: 100px;
+            height: 100px;
             object-fit: cover;
             border-radius: 50%;
-            border: 4px solid var(--accent-pink);
-            margin: 5px auto;
+            border: 3px solid var(--accent-pink);
+            margin: 0 auto 10px auto;
             background-color: #eee;
             display: block;
         }
@@ -71,10 +71,11 @@
             flex-direction: column;
             justify-content: center;
             flex-grow: 1;
+            overflow-y: auto;
         }
         
         .mode-section {
-            margin: 15px 0;
+            margin: 10px 0;
             padding: 15px;
             background: #F9F9F9;
             border-radius: 20px;
@@ -94,69 +95,76 @@
             display: flex;
             justify-content: space-between;
             align-items: center;
-            margin-bottom: 10px;
+            margin-bottom: 5px;
+            flex-shrink: 0;
         }
 
         .timer-badge {
-            font-size: 1.2rem;
+            font-size: 1.1rem;
             color: #E65100;
             background: #FFF3E0;
-            padding: 5px 12px;
+            padding: 5px 10px;
             border-radius: 15px;
             border: 2px solid #FFCC80;
             font-weight: bold;
         }
 
-        /* --- 題目顯示區 --- */
-        .question-box {
-            font-size: 4rem;
-            color: var(--text-color);
-            margin: 20px 0;
-            font-weight: bold;
+        /* --- 題目顯示區 (關鍵修改) --- */
+        #question-area {
             flex-grow: 1;
             display: flex;
             justify-content: center;
             align-items: center;
+            overflow-y: auto; /* 防止文字過多溢出 */
+            margin: 5px 0;
         }
 
-        /* --- 素養題 (含注音樣式) --- */
+        /* 基礎數字題樣式 */
+        .question-box-basic {
+            font-size: 4rem;
+            color: var(--text-color);
+            font-weight: bold;
+        }
+
+        /* 素養題文字樣式 (包含注音) */
         .story-text {
-            font-size: 1.5rem; /* 字體加大 */
+            font-size: 1.3rem;
             color: #333;
             text-align: left;
             background: #fff;
             padding: 15px;
             border-radius: 15px;
-            line-height: 2.2; /* 行高加大給注音 */
+            line-height: 1.8; /* 行距拉大 */
             border: 2px solid var(--primary-blue);
-            flex-grow: 1;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
+            width: 100%;
+            box-sizing: border-box;
+            word-break: break-all;
         }
 
-        /* 注音標籤設定 */
-        ruby { margin: 0 2px; }
-        rt { 
-            font-size: 0.6em; 
-            color: #888; 
+        /* 注音樣式 (灰色小字) */
+        .zhu {
+            color: #888;
+            font-size: 0.85em; /* 比國字稍小 */
+            margin-right: 2px;
             font-weight: normal;
         }
-
+        
+        /* 數字強調 */
         .highlight {
             color: #E91E63;
             font-weight: bold;
-            font-size: 1.8rem;
-            padding: 0 5px;
+            font-size: 1.4rem;
+            margin: 0 3px;
         }
 
         /* --- 四選一按鈕區 --- */
         .options-grid {
             display: grid;
-            grid-template-columns: 1fr 1fr; /* 兩欄 */
-            gap: 15px;
-            margin-top: auto;
-            margin-bottom: 20px;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+            margin-top: auto; /* 推到底部 */
+            margin-bottom: 10px;
+            flex-shrink: 0;
         }
 
         .option-btn {
@@ -164,10 +172,10 @@
             border: 3px solid var(--primary-blue);
             border-radius: 20px;
             color: var(--dark-blue);
-            font-size: 2.5rem; /* 選項字體超大 */
-            padding: 20px 0;
+            font-size: 2rem;
+            padding: 15px 0;
             cursor: pointer;
-            box-shadow: 0 5px 0 #B0E0E6;
+            box-shadow: 0 4px 0 #B0E0E6;
             transition: all 0.1s;
             font-weight: bold;
         }
@@ -177,7 +185,6 @@
             box-shadow: 0 1px 0 #B0E0E6;
         }
 
-        /* 答錯時的按鈕樣式 */
         .option-btn.wrong-anim {
             background-color: #FFEBEE;
             border-color: var(--wrong-red);
@@ -185,14 +192,13 @@
             animation: shake 0.5s;
         }
 
-        /* 答對時的按鈕樣式 */
         .option-btn.correct-anim {
             background-color: #E8F5E9;
             border-color: var(--correct-green);
             color: var(--correct-green);
         }
 
-        /* --- 通用按鈕 --- */
+        /* --- 按鈕與回饋 --- */
         .btn {
             background-color: var(--primary-blue);
             color: white;
@@ -204,26 +210,23 @@
             box-shadow: 0 4px 0 #5CA0C0;
         }
         .btn:active { transform: translateY(4px); box-shadow: none; }
-        
-        .btn-menu { width: 100%; font-size: 1.5rem; padding: 15px; margin: 5px 0; }
-        .btn-back { background: #FFD54F; box-shadow: 0 4px 0 #FFB300; color: #333; }
+        .btn-menu { width: 100%; font-size: 1.4rem; padding: 12px; margin: 5px 0; }
+        .btn-back { background: #FFD54F; box-shadow: 0 4px 0 #FFB300; color: #333; font-size: 1rem; padding: 8px 15px;}
         .btn-home { background: #ccc; box-shadow: 0 4px 0 #999; font-size: 1rem; padding: 8px 15px;}
 
-        /* 動畫 */
         @keyframes shake {
-            0% { transform: translateX(0); }
-            25% { transform: translateX(-5px); }
+            0%, 100% { transform: translateX(0); }
+            25%, 75% { transform: translateX(-5px); }
             50% { transform: translateX(5px); }
-            75% { transform: translateX(-5px); }
-            100% { transform: translateX(0); }
         }
 
         #feedback-area {
-            height: 40px;
-            font-size: 1.2rem;
+            height: 30px;
+            font-size: 1.1rem;
             font-weight: bold;
             color: var(--primary-blue);
-            margin: 10px 0;
+            margin: 5px 0;
+            flex-shrink: 0;
         }
 
     </style>
@@ -237,7 +240,7 @@
             <h1>大耳狗九九乘法</h1>
             
             <div class="mode-section">
-                <h3>基礎練習：秒數挑戰 (4選1)</h3>
+                <h3>基礎練習：秒數挑戰</h3>
                 <div class="grid-buttons-small">
                     <button class="btn" onclick="startGame('basic', 2)">2</button>
                     <button class="btn" onclick="startGame('basic', 3)">3</button>
@@ -252,7 +255,7 @@
             </div>
 
             <div class="mode-section" style="border-color: #FFB7C5;">
-                <h3>進階挑戰：注音素養題</h3>
+                <h3>進階挑戰：50題素養題</h3>
                 <button class="btn btn-menu" style="background-color: #FF9800; box-shadow: 0 4px 0 #E65100;" onclick="startGame('story', 0)">開始閱讀挑戰</button>
             </div>
         </div>
@@ -270,41 +273,29 @@
             
             <div id="feedback-area"></div>
 
-            <div id="options-area" class="options-grid">
-                </div>
+            <div id="options-area" class="options-grid"></div>
         </div>
 
     </div>
 
     <script>
-        // --- 音效資料 (Base64) ---
-        // 這樣就不需要外部檔案，可以直接執行
-        const SOUNDS = {
-            correct: new Audio("data:audio/mp3;base64,//NExAAAAANIAAAAAExBTUUzLjEwMKqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqq//NExAAAAANIAAAAAExBTUUzLjEwMKqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqq//NExAAAAANIAAAAAExBTUUzLjEwMKqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqq//NExAAAAANIAAAAAExBTUUzLjEwMKqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqq//NExAAAAANIAAAAAExBTUUzLjEwMKqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqq"), // (這裡為了簡潔省略長字串，實際請使用下方完整邏輯，但我這裡模擬簡單的叮聲)
-            wrong: new Audio("") 
-        };
-
-        // 由於 Base64 太長，我使用簡單的 Web Audio API 生成音效 (Beep)，這樣程式碼最乾淨且不需要下載檔案
+        // 音效 (Web Audio API)
         const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
-        
         function playSound(type) {
             if (audioCtx.state === 'suspended') audioCtx.resume();
             const osc = audioCtx.createOscillator();
             const gainNode = audioCtx.createGain();
             osc.connect(gainNode);
             gainNode.connect(audioCtx.destination);
-
             if (type === 'correct') {
-                // 叮咚 (高音 Do-Mi)
                 osc.type = 'sine';
-                osc.frequency.setValueAtTime(523.25, audioCtx.currentTime); // C5
-                osc.frequency.setValueAtTime(659.25, audioCtx.currentTime + 0.1); // E5
+                osc.frequency.setValueAtTime(523.25, audioCtx.currentTime);
+                osc.frequency.setValueAtTime(659.25, audioCtx.currentTime + 0.1);
                 gainNode.gain.setValueAtTime(0.1, audioCtx.currentTime);
                 gainNode.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + 0.5);
                 osc.start();
                 osc.stop(audioCtx.currentTime + 0.5);
             } else {
-                // 噗噗 (低音鋸齒波)
                 osc.type = 'sawtooth';
                 osc.frequency.setValueAtTime(150, audioCtx.currentTime);
                 gainNode.gain.setValueAtTime(0.1, audioCtx.currentTime);
@@ -314,37 +305,67 @@
             }
         }
 
-        // --- 圖片連結 ---
+        // 圖片
         const IMAGES = {
             normal: "https://placehold.co/150x150/89CFF0/FFFFFF?text=Hello",
             happy: "https://placehold.co/150x150/98FB98/FFFFFF?text=Happy!",
             sad: "https://placehold.co/150x150/FFB7C5/FFFFFF?text=Oh+No"
         };
 
-        // --- 題目資料 ---
-        // 注音 Helper: 
-        // 格式: <ruby>字<rt>ㄗˋ</rt></ruby>
+        // --- 50題素養題庫 (國字+注音並列格式) ---
+        // 格式說明: t: 題目文字, a: 答案
+        // 為了閱讀方便，注音已經直接排版在國字旁邊，例如：一(ㄧ)
         const storyQuestions = [
-            { 
-                // 一隻大耳狗有 2 隻耳朵，6 隻大耳狗共有幾隻耳朵？
-                t: "<ruby>一<rt>ㄧ</rt></ruby><ruby>隻<rt>ㄓ</rt></ruby><ruby>大<rt>ㄉㄚˋ</rt></ruby><ruby>耳<rt>ㄦˇ</rt></ruby><ruby>狗<rt>ㄍㄡˇ</rt></ruby><ruby>有<rt>ㄧㄡˇ</rt></ruby> <span class='highlight'>2</span> <ruby>隻<rt>ㄓ</rt></ruby><ruby>耳<rt>ㄦˇ</rt></ruby><ruby>朵<rt>ㄉㄨㄛ</rt></ruby>，<br><span class='highlight'>6</span> <ruby>隻<rt>ㄓ</rt></ruby><ruby>大<rt>ㄉㄚˋ</rt></ruby><ruby>耳<rt>ㄦˇ</rt></ruby><ruby>狗<rt>ㄍㄡˇ</rt></ruby><ruby>共<rt>ㄍㄨㄥˋ</rt></ruby><ruby>有<rt>ㄧㄡˇ</rt></ruby><ruby>幾<rt>ㄐㄧˇ</rt></ruby><ruby>隻<rt>ㄓ</rt></ruby><ruby>耳<rt>ㄦˇ</rt></ruby><ruby>朵<rt>ㄉㄨㄛ</rt></ruby>？", 
-                a: 12 
-            },
-            { 
-                // 一個肉桂捲賣 9 元，妹妹買了 3 個，請問要付多少錢？
-                t: "<ruby>一<rt>ㄧˊ</rt></ruby><ruby>個<rt>ㄍㄜ˙</rt></ruby><ruby>肉<rt>ㄖㄡˋ</rt></ruby><ruby>桂<rt>ㄍㄨㄟˋ</rt></ruby><ruby>捲<rt>ㄐㄩㄢˇ</rt></ruby><ruby>賣<rt>ㄇㄞˋ</rt></ruby> <span class='highlight'>9</span> <ruby>元<rt>ㄩㄢˊ</rt></ruby>，<br><ruby>妹<rt>ㄇㄟˋ</rt></ruby><ruby>妹<rt>ㄇㄟ˙</rt></ruby><ruby>買<rt>ㄇㄞˇ</rt></ruby><ruby>了<rt>ㄌㄜ˙</rt></ruby> <span class='highlight'>3</span> <ruby>個<rt>ㄍㄜ˙</rt></ruby>，<br><ruby>請<rt>ㄑㄧㄥˇ</rt></ruby><ruby>問<rt>ㄨㄣˋ</rt></ruby><ruby>要<rt>ㄧㄠˋ</rt></ruby><ruby>付<rt>ㄈㄨˋ</rt></ruby><ruby>多<rt>ㄉㄨㄛ</rt></ruby><ruby>少<rt>ㄕㄠˇ</rt></ruby><ruby>錢<rt>ㄑㄧㄢˊ</rt></ruby>？", 
-                a: 27 
-            },
-            { 
-                // 一盒彩色筆有 8 枝，老師買了 5 盒，共有幾枝？
-                t: "<ruby>一<rt>ㄧˋ</rt></ruby><ruby>盒<rt>ㄏㄜˊ</rt></ruby><ruby>彩<rt>ㄘㄞˇ</rt></ruby><ruby>色<rt>ㄙㄜˋ</rt></ruby><ruby>筆<rt>ㄅㄧˇ</rt></ruby><ruby>有<rt>ㄧㄡˇ</rt></ruby> <span class='highlight'>8</span> <ruby>枝<rt>ㄓ</rt></ruby>，<br><ruby>老<rt>ㄌㄠˇ</rt></ruby><ruby>師<rt>ㄕ</rt></ruby><ruby>買<rt>ㄇㄞˇ</rt></ruby><ruby>了<rt>ㄌㄜ˙</rt></ruby> <span class='highlight'>5</span> <ruby>盒<rt>ㄏㄜˊ</rt></ruby>，<br><ruby>共<rt>ㄍㄨㄥˋ</rt></ruby><ruby>有<rt>ㄧㄡˇ</rt></ruby><ruby>幾<rt>ㄐㄧˇ</rt></ruby><ruby>枝<rt>ㄓ</rt></ruby>？", 
-                a: 40 
-            },
-            {
-                // 一星期有 7 天，放暑假放了 4 個星期，請問總共放了幾天？
-                t: "<ruby>一<rt>ㄧˋ</rt></ruby><ruby>星<rt>ㄒㄧㄥ</rt></ruby><ruby>期<rt>ㄑㄧˊ</rt></ruby><ruby>有<rt>ㄧㄡˇ</rt></ruby> <span class='highlight'>7</span> <ruby>天<rt>ㄊㄧㄢ</rt></ruby>，<br><ruby>放<rt>ㄈㄤˋ</rt></ruby><ruby>暑<rt>ㄕㄨˇ</rt></ruby><ruby>假<rt>ㄐㄧㄚˋ</rt></ruby><ruby>放<rt>ㄈㄤˋ</rt></ruby><ruby>了<rt>ㄌㄜ˙</rt></ruby> <span class='highlight'>4</span> <ruby>個<rt>ㄍㄜ˙</rt></ruby><ruby>星<rt>ㄒㄧㄥ</rt></ruby><ruby>期<rt>ㄑㄧˊ</rt></ruby>，<br><ruby>總<rt>ㄗㄨㄥˇ</rt></ruby><ruby>共<rt>ㄍㄨㄥˋ</rt></ruby><ruby>幾<rt>ㄐㄧˇ</rt></ruby><ruby>天<rt>ㄊㄧㄢ</rt></ruby>？",
-                a: 28
-            }
+            { t: "一(ㄧˋ) 隻(ㄓ) 大(ㄉㄚˋ) 耳(ㄦˇ) 狗(ㄍㄡˇ) 有(ㄧㄡˇ) <span class='highlight'>2</span> 隻(ㄓ) 耳(ㄦˇ) 朵(ㄉㄨㄛ˙) ， <span class='highlight'>6</span> 隻(ㄓ) 大(ㄉㄚˋ) 耳(ㄦˇ) 狗(ㄍㄡˇ) 共(ㄍㄨㄥˋ) 有(ㄧㄡˇ) 幾(ㄐㄧˇ) 隻(ㄓ) 耳(ㄦˇ) 朵(ㄉㄨㄛ˙) ？", a: 12 },
+            { t: "腳(ㄐㄧㄠˇ) 踏(ㄊㄚˋ) 車(ㄔㄜ) 有(ㄧㄡˇ) <span class='highlight'>2</span> 個(ㄍㄜ˙) 輪(ㄌㄨㄣˊ) 子(ㄗ˙) ， <span class='highlight'>9</span> 輛(ㄌㄧㄤˋ) 腳(ㄐㄧㄠˇ) 踏(ㄊㄚˋ) 車(ㄔㄜ) 共(ㄍㄨㄥˋ) 有(ㄧㄡˇ) 幾(ㄐㄧˇ) 個(ㄍㄜ˙) 輪(ㄌㄨㄣˊ) 子(ㄗ˙) ？", a: 18 },
+            { t: "一(ㄧˋ) 雙(ㄕㄨㄤ) 筷(ㄎㄨㄞˋ) 子(ㄗ˙) 有(ㄧㄡˇ) <span class='highlight'>2</span> 根(ㄍㄣ) ， <span class='highlight'>8</span> 雙(ㄕㄨㄤ) 筷(ㄎㄨㄞˋ) 子(ㄗ˙) 共(ㄍㄨㄥˋ) 有(ㄧㄡˇ) 幾(ㄐㄧˇ) 根(ㄍㄣ) ？", a: 16 },
+            { t: "人(ㄖㄣˊ) 有(ㄧㄡˇ) <span class='highlight'>2</span> 隻(ㄓ) 眼(ㄧㄢˇ) 睛(ㄐㄧㄥ) ， <span class='highlight'>5</span> 個(ㄍㄜ˙) 人(ㄖㄣˊ) 共(ㄍㄨㄥˋ) 有(ㄧㄡˇ) 幾(ㄐㄧˇ) 隻(ㄓ) 眼(ㄧㄢˇ) 睛(ㄐㄧㄥ) ？", a: 10 },
+            { t: "一(ㄧˋ) 雙(ㄕㄨㄤ) 鞋(ㄒㄧㄝˊ) 子(ㄗ˙) 有(ㄧㄡˇ) <span class='highlight'>2</span> 隻(ㄓ) ， <span class='highlight'>7</span> 雙(ㄕㄨㄤ) 鞋(ㄒㄧㄝˊ) 子(ㄗ˙) 共(ㄍㄨㄥˋ) 有(ㄧㄡˇ) 幾(ㄐㄧˇ) 隻(ㄓ) ？", a: 14 },
+            { t: "三(ㄙㄢ) 輪(ㄌㄨㄣˊ) 車(ㄔㄜ) 有(ㄧㄡˇ) <span class='highlight'>3</span> 個(ㄍㄜ˙) 輪(ㄌㄨㄣˊ) 子(ㄗ˙) ， <span class='highlight'>4</span> 輛(ㄌㄧㄤˋ) 三(ㄙㄢ) 輪(ㄌㄨㄣˊ) 車(ㄔㄜ) 共(ㄍㄨㄥˋ) 有(ㄧㄡˇ) 幾(ㄐㄧˇ) 個(ㄍㄜ˙) 輪(ㄌㄨㄣˊ) 子(ㄗ˙) ？", a: 12 },
+            { t: "布(ㄅㄨˋ) 丁(ㄉㄧㄥ) <span class='highlight'>3</span> 個(ㄍㄜ˙) 裝(ㄓㄨㄤ) 一(ㄧˋ) 盒(ㄏㄜˊ) ， <span class='highlight'>6</span> 盒(ㄏㄜˊ) 共(ㄍㄨㄥˋ) 有(ㄧㄡˇ) 幾(ㄐㄧˇ) 個(ㄍㄜ˙) 布(ㄅㄨˋ) 丁(ㄉㄧㄥ) ？", a: 18 },
+            { t: "一(ㄧˋ) 天(ㄊㄧㄢ) 吃(ㄔ) <span class='highlight'>3</span> 餐(ㄘㄢ) ， <span class='highlight'>5</span> 天(ㄊㄧㄢ) 共(ㄍㄨㄥˋ) 吃(ㄔ) 了(ㄌㄜ˙) 幾(ㄐㄧˇ) 餐(ㄘㄢ) ？", a: 15 },
+            { t: "弟(ㄉㄧˋ) 弟(ㄉㄧ˙) 每(ㄇㄟˇ) 天(ㄊㄧㄢ) 存(ㄘㄨㄣˊ) <span class='highlight'>3</span> 元(ㄩㄢˊ) ， <span class='highlight'>9</span> 天(ㄊㄧㄢ) 可(ㄎㄜˇ) 以(ㄧˇ) 存(ㄘㄨㄣˊ) 多(ㄉㄨㄛ) 少(ㄕㄠˇ) 元(ㄩㄢˊ) ？", a: 27 },
+            { t: "幸(ㄒㄧㄥˋ) 運(ㄩㄣˋ) 草(ㄘㄠˇ) 有(ㄧㄡˇ) <span class='highlight'>3</span> 片(ㄆㄧㄢˋ) 葉(ㄧㄝˋ) 子(ㄗ˙) ， <span class='highlight'>8</span> 株(ㄓㄨ) 幸(ㄒㄧㄥˋ) 運(ㄩㄣˋ) 草(ㄘㄠˇ) 共(ㄍㄨㄥˋ) 有(ㄧㄡˇ) 幾(ㄐㄧˇ) 片(ㄆㄧㄢˋ) 葉(ㄧㄝˋ) 子(ㄗ˙) ？", a: 24 },
+            { t: "汽(ㄑㄧˋ) 車(ㄔㄜ) 有(ㄧㄡˇ) <span class='highlight'>4</span> 個(ㄍㄜ˙) 輪(ㄌㄨㄣˊ) 子(ㄗ˙) ， <span class='highlight'>5</span> 輛(ㄌㄧㄤˋ) 汽(ㄑㄧˋ) 車(ㄔㄜ) 共(ㄍㄨㄥˋ) 有(ㄧㄡˇ) 幾(ㄐㄧˇ) 個(ㄍㄜ˙) 輪(ㄌㄨㄣˊ) 子(ㄗ˙) ？", a: 20 },
+            { t: "椅(ㄧˇ) 子(ㄗ˙) 有(ㄧㄡˇ) <span class='highlight'>4</span> 隻(ㄓ) 腳(ㄐㄧㄠˇ) ， <span class='highlight'>6</span> 張(ㄓㄤ) 椅(ㄧˇ) 子(ㄗ˙) 共(ㄍㄨㄥˋ) 有(ㄧㄡˇ) 幾(ㄐㄧˇ) 隻(ㄓ) 腳(ㄐㄧㄠˇ) ？", a: 24 },
+            { t: "小(ㄒㄧㄠˇ) 狗(ㄍㄡˇ) 有(ㄧㄡˇ) <span class='highlight'>4</span> 條(ㄊㄧㄠˊ) 腿(ㄊㄨㄟˇ) ， <span class='highlight'>3</span> 隻(ㄓ) 小(ㄒㄧㄠˇ) 狗(ㄍㄡˇ) 共(ㄍㄨㄥˋ) 有(ㄧㄡˇ) 幾(ㄐㄧˇ) 條(ㄊㄧㄠˊ) 腿(ㄊㄨㄟˇ) ？", a: 12 },
+            { t: "一(ㄧˋ) 盒(ㄏㄜˊ) 點(ㄉㄧㄢˇ) 心(ㄒㄧㄣ) <span class='highlight'>4</span> 個(ㄍㄜ˙) ， <span class='highlight'>9</span> 盒(ㄏㄜˊ) 共(ㄍㄨㄥˋ) 有(ㄧㄡˇ) 幾(ㄐㄧˇ) 個(ㄍㄜ˙) 點(ㄉㄧㄢˇ) 心(ㄒㄧㄣ) ？", a: 36 },
+            { t: "正(ㄓㄥˋ) 方(ㄈㄤ) 形(ㄒㄧㄥˊ) 有(ㄧㄡˇ) <span class='highlight'>4</span> 個(ㄍㄜ˙) 邊(ㄅㄧㄢ) ， <span class='highlight'>7</span> 個(ㄍㄜ˙) 正(ㄓㄥˋ) 方(ㄈㄤ) 形(ㄒㄧㄥˊ) 共(ㄍㄨㄥˋ) 有(ㄧㄡˇ) 幾(ㄐㄧˇ) 個(ㄍㄜ˙) 邊(ㄅㄧㄢ) ？", a: 28 },
+            { t: "一(ㄧˋ) 隻(ㄓ) 手(ㄕㄡˇ) 有(ㄧㄡˇ) <span class='highlight'>5</span> 根(ㄍㄣ) 手(ㄕㄡˇ) 指(ㄓˇ) 頭(ㄊㄡ˙) ， <span class='highlight'>4</span> 隻(ㄓ) 手(ㄕㄡˇ) 共(ㄍㄨㄥˋ) 有(ㄧㄡˇ) 幾(ㄐㄧˇ) 根(ㄍㄣ) ？", a: 20 },
+            { t: "海(ㄏㄞˇ) 星(ㄒㄧㄥ) 有(ㄧㄡˇ) <span class='highlight'>5</span> 個(ㄍㄜ˙) 角(ㄐㄧㄠˇ) ， <span class='highlight'>6</span> 隻(ㄓ) 海(ㄏㄞˇ) 星(ㄒㄧㄥ) 共(ㄍㄨㄥˋ) 有(ㄧㄡˇ) 幾(ㄐㄧˇ) 個(ㄍㄜ˙) 角(ㄐㄧㄠˇ) ？", a: 30 },
+            { t: "花(ㄏㄨㄚ) 朵(ㄉㄨㄛˇ) 有(ㄧㄡˇ) <span class='highlight'>5</span> 片(ㄆㄧㄢˋ) 花(ㄏㄨㄚ) 瓣(ㄅㄢˋ) ， <span class='highlight'>9</span> 朵(ㄉㄨㄛˇ) 花(ㄏㄨㄚ) 共(ㄍㄨㄥˋ) 有(ㄧㄡˇ) 幾(ㄐㄧˇ) 片(ㄆㄧㄢˋ) 花(ㄏㄨㄚ) 瓣(ㄅㄢˋ) ？", a: 45 },
+            { t: "一(ㄧˋ) 個(ㄍㄜ˙) 銅(ㄊㄨㄥˊ) 板(ㄅㄢˇ) <span class='highlight'>5</span> 元(ㄩㄢˊ) ， <span class='highlight'>8</span> 個(ㄍㄜ˙) 銅(ㄊㄨㄥˊ) 板(ㄅㄢˇ) 是(ㄕˋ) 多(ㄉㄨㄛ) 少(ㄕㄠˇ) 元(ㄩㄢˊ) ？", a: 40 },
+            { t: "小(ㄒㄧㄠˇ) 朋(ㄆㄥˊ) 友(ㄧㄡˇ) <span class='highlight'>5</span> 人(ㄖㄣˊ) 一(ㄧˋ) 組(ㄗㄨˇ) ， <span class='highlight'>7</span> 組(ㄗㄨˇ) 共(ㄍㄨㄥˋ) 有(ㄧㄡˇ) 多(ㄉㄨㄛ) 少(ㄕㄠˇ) 人(ㄖㄣˊ) ？", a: 35 },
+            { t: "螞(ㄇㄚˇ) 蟻(ㄧˇ) 有(ㄧㄡˇ) <span class='highlight'>6</span> 隻(ㄓ) 腳(ㄐㄧㄠˇ) ， <span class='highlight'>3</span> 隻(ㄓ) 螞(ㄇㄚˇ) 蟻(ㄧˇ) 共(ㄍㄨㄥˋ) 有(ㄧㄡˇ) 幾(ㄐㄧˇ) 隻(ㄓ) 腳(ㄐㄧㄠˇ) ？", a: 18 },
+            { t: "一(ㄧˋ) 盒(ㄏㄜˊ) 雞(ㄐㄧ) 蛋(ㄉㄢˋ) 有(ㄧㄡˇ) <span class='highlight'>6</span> 顆(ㄎㄜ) ， <span class='highlight'>5</span> 盒(ㄏㄜˊ) 共(ㄍㄨㄥˋ) 有(ㄧㄡˇ) 幾(ㄐㄧˇ) 顆(ㄎㄜ) 雞(ㄐㄧ) 蛋(ㄉㄢˋ) ？", a: 30 },
+            { t: "蜜(ㄇㄧˋ) 蜂(ㄈㄥ) 有(ㄧㄡˇ) <span class='highlight'>6</span> 隻(ㄓ) 腳(ㄐㄧㄠˇ) ， <span class='highlight'>8</span> 隻(ㄓ) 蜜(ㄇㄧˋ) 蜂(ㄈㄥ) 共(ㄍㄨㄥˋ) 有(ㄧㄡˇ) 幾(ㄐㄧˇ) 隻(ㄓ) 腳(ㄐㄧㄠˇ) ？", a: 48 },
+            { t: "一(ㄧˋ) 箱(ㄒㄧㄤ) 飲(ㄧㄣˇ) 料(ㄌㄧㄠˋ) <span class='highlight'>6</span> 瓶(ㄆㄧㄥˊ) ， <span class='highlight'>9</span> 箱(ㄒㄧㄤ) 共(ㄍㄨㄥˋ) 有(ㄧㄡˇ) 幾(ㄐㄧˇ) 瓶(ㄆㄧㄥˊ) ？", a: 54 },
+            { t: "骰(ㄊㄡˊ) 子(ㄗ˙) 有(ㄧㄡˇ) <span class='highlight'>6</span> 個(ㄍㄜ˙) 面(ㄇㄧㄢˋ) ， <span class='highlight'>4</span> 顆(ㄎㄜ) 骰(ㄊㄡˊ) 子(ㄗ˙) 共(ㄍㄨㄥˋ) 有(ㄧㄡˇ) 幾(ㄐㄧˇ) 個(ㄍㄜ˙) 面(ㄇㄧㄢˋ) ？", a: 24 },
+            { t: "一(ㄧˋ) 星(ㄒㄧㄥ) 期(ㄑㄧˊ) 有(ㄧㄡˇ) <span class='highlight'>7</span> 天(ㄊㄧㄢ) ， <span class='highlight'>2</span> 個(ㄍㄜ˙) 星(ㄒㄧㄥ) 期(ㄑㄧˊ) 共(ㄍㄨㄥˋ) 有(ㄧㄡˇ) 幾(ㄐㄧˇ) 天(ㄊㄧㄢ) ？", a: 14 },
+            { t: "彩(ㄘㄞˇ) 虹(ㄏㄨㄥˊ) 有(ㄧㄡˇ) <span class='highlight'>7</span> 種(ㄓㄨㄥˇ) 顏(ㄧㄢˊ) 色(ㄙㄜˋ) ， <span class='highlight'>3</span> 道(ㄉㄠˋ) 彩(ㄘㄞˇ) 虹(ㄏㄨㄥˊ) 共(ㄍㄨㄥˋ) 有(ㄧㄡˇ) 幾(ㄐㄧˇ) 種(ㄓㄨㄥˇ) 顏(ㄧㄢˊ) 色(ㄙㄜˋ) ？", a: 21 },
+            { t: "小(ㄒㄧㄠˇ)矮(ㄞˇ)人(ㄖㄣˊ) 有(ㄧㄡˇ) <span class='highlight'>7</span> 個(ㄍㄜ˙) ， <span class='highlight'>5</span> 組(ㄗㄨˇ) 小(ㄒㄧㄠˇ)矮(ㄞˇ)人(ㄖㄣˊ) 共(ㄍㄨㄥˋ) 有(ㄧㄡˇ) 幾(ㄐㄧˇ) 個(ㄍㄜ˙) ？", a: 35 },
+            { t: "一(ㄧˋ) 包(ㄅㄠ) 糖(ㄊㄤˊ) 果(ㄍㄨㄛˇ) <span class='highlight'>7</span> 顆(ㄎㄜ) ， <span class='highlight'>8</span> 包(ㄅㄠ) 共(ㄍㄨㄥˋ) 有(ㄧㄡˇ) 幾(ㄐㄧˇ) 顆(ㄎㄜ) ？", a: 56 },
+            { t: "北(ㄅㄟˇ) 斗(ㄉㄡˇ) 七(ㄑㄧ) 星(ㄒㄧㄥ) 有(ㄧㄡˇ) <span class='highlight'>7</span> 顆(ㄎㄜ) 星(ㄒㄧㄥ) 星(ㄒㄧㄥ) ， <span class='highlight'>9</span> 個(ㄍㄜ˙) 星(ㄒㄧㄥ) 座(ㄗㄨㄛˋ) 共(ㄍㄨㄥˋ) 幾(ㄐㄧˇ) 顆(ㄎㄜ) ？", a: 63 },
+            { t: "蜘(ㄓ) 蛛(ㄓㄨ) 有(ㄧㄡˇ) <span class='highlight'>8</span> 隻(ㄓ) 腳(ㄐㄧㄠˇ) ， <span class='highlight'>3</span> 隻(ㄓ) 蜘(ㄓ) 蛛(ㄓㄨ) 共(ㄍㄨㄥˋ) 有(ㄧㄡˇ) 幾(ㄐㄧˇ) 隻(ㄓ) 腳(ㄐㄧㄠˇ) ？", a: 24 },
+            { t: "章(ㄓㄤ) 魚(ㄩˊ) 有(ㄧㄡˇ) <span class='highlight'>8</span> 隻(ㄓ) 腳(ㄐㄧㄠˇ) ， <span class='highlight'>6</span> 隻(ㄓ) 章(ㄓㄤ) 魚(ㄩˊ) 共(ㄍㄨㄥˋ) 有(ㄧㄡˇ) 幾(ㄐㄧˇ) 隻(ㄓ) 腳(ㄐㄧㄠˇ) ？", a: 48 },
+            { t: "一(ㄧˋ) 盒(ㄏㄜˊ) 蠟(ㄌㄚˋ) 筆(ㄅㄧˇ) <span class='highlight'>8</span> 枝(ㄓ) ， <span class='highlight'>5</span> 盒(ㄏㄜˊ) 共(ㄍㄨㄥˋ) 有(ㄧㄡˇ) 幾(ㄐㄧˇ) 枝(ㄓ) ？", a: 40 },
+            { t: "披(ㄆㄧ) 薩(ㄙㄚˋ) 切(ㄑㄧㄝ) 成(ㄔㄥˊ) <span class='highlight'>8</span> 片(ㄆㄧㄢˋ) ， <span class='highlight'>4</span> 個(ㄍㄜ˙) 披(ㄆㄧ) 薩(ㄙㄚˋ) 共(ㄍㄨㄥˋ) 有(ㄧㄡˇ) 幾(ㄐㄧˇ) 片(ㄆㄧㄢˋ) ？", a: 32 },
+            { t: "買(ㄇㄞˇ) 一(ㄧˋ) 枝(ㄓ) 筆(ㄅㄧˇ) <span class='highlight'>8</span> 元(ㄩㄢˊ) ， 買(ㄇㄞˇ) <span class='highlight'>9</span> 枝(ㄓ) 要(ㄧㄠˋ) 付(ㄈㄨˋ) 多(ㄉㄨㄛ) 少(ㄕㄠˇ) 元(ㄩㄢˊ) ？", a: 72 },
+            { t: "棒(ㄅㄤˋ) 球(ㄑㄧㄡˊ) 隊(ㄉㄨㄟˋ) 有(ㄧㄡˇ) <span class='highlight'>9</span> 個(ㄍㄜ˙) 人(ㄖㄣˊ) ， <span class='highlight'>2</span> 個(ㄍㄜ˙) 球(ㄑㄧㄡˊ) 隊(ㄉㄨㄟˋ) 共(ㄍㄨㄥˋ) 有(ㄧㄡˇ) 幾(ㄐㄧˇ) 人(ㄖㄣˊ) ？", a: 18 },
+            { t: "一(ㄧˋ) 個(ㄍㄜ˙) 肉(ㄖㄡˋ) 桂(ㄍㄨㄟˋ) 捲(ㄐㄩㄢˇ) <span class='highlight'>9</span> 元(ㄩㄢˊ) ， 買(ㄇㄞˇ) <span class='highlight'>5</span> 個(ㄍㄜ˙) 要(ㄧㄠˋ) 多(ㄉㄨㄛ) 少(ㄕㄠˇ) 元(ㄩㄢˊ) ？", a: 45 },
+            { t: "一(ㄧˋ) 盒(ㄏㄜˊ) 巧(ㄑㄧㄠˇ) 克(ㄎㄜˋ) 力(ㄌㄧˋ) <span class='highlight'>9</span> 顆(ㄎㄜ) ， <span class='highlight'>3</span> 盒(ㄏㄜˊ) 共(ㄍㄨㄥˋ) 有(ㄧㄡˇ) 幾(ㄐㄧˇ) 顆(ㄎㄜ) ？", a: 27 },
+            { t: "蘋(ㄆㄧㄣˊ) 果(ㄍㄨㄛˇ) 一(ㄧˋ) 顆(ㄎㄜ) <span class='highlight'>9</span> 元(ㄩㄢˊ) ， 媽(ㄇㄚ) 媽(ㄇㄚ) 買(ㄇㄞˇ) <span class='highlight'>7</span> 顆(ㄎㄜ) 要(ㄧㄠˋ) 多(ㄉㄨㄛ) 少(ㄕㄠˇ) 元(ㄩㄢˊ) ？", a: 63 },
+            { t: "九(ㄐㄧㄡˇ) 宮(ㄍㄨㄥ) 格(ㄍㄜˊ) 有(ㄧㄡˇ) <span class='highlight'>9</span> 格(ㄍㄜˊ) ， <span class='highlight'>4</span> 張(ㄓㄤ) 紙(ㄓˇ) 共(ㄍㄨㄥˋ) 有(ㄧㄡˇ) 幾(ㄐㄧˇ) 格(ㄍㄜˊ) ？", a: 36 },
+            { t: "氣(ㄑㄧˋ) 球(ㄑㄧㄡˊ) 一(ㄧˋ) 個(ㄍㄜ˙) <span class='highlight'>2</span> 元(ㄩㄢˊ) ， 買(ㄇㄞˇ) <span class='highlight'>8</span> 個(ㄍㄜ˙) 要(ㄧㄠˋ) 付(ㄈㄨˋ) 多(ㄉㄨㄛ) 少(ㄕㄠˇ) 元(ㄩㄢˊ) ？", a: 16 },
+            { t: "口(ㄎㄡˇ) 罩(ㄓㄠˋ) 一(ㄧˋ) 片(ㄆㄧㄢˋ) <span class='highlight'>3</span> 元(ㄩㄢˊ) ， 買(ㄇㄞˇ) <span class='highlight'>7</span> 片(ㄆㄧㄢˋ) 要(ㄧㄠˋ) 付(ㄈㄨˋ) 多(ㄉㄨㄛ) 少(ㄕㄠˇ) 元(ㄩㄢˊ) ？", a: 21 },
+            { t: "貼(ㄊㄧㄝ) 紙(ㄓˇ) 一(ㄧˋ) 張(ㄓㄤ) <span class='highlight'>4</span> 元(ㄩㄢˊ) ， 買(ㄇㄞˇ) <span class='highlight'>6</span> 張(ㄓㄤ) 要(ㄧㄠˋ) 付(ㄈㄨˋ) 多(ㄉㄨㄛ) 少(ㄕㄠˇ) 元(ㄩㄢˊ) ？", a: 24 },
+            { t: "鉛(ㄑㄧㄢ) 筆(ㄅㄧˇ) 一(ㄧˋ) 枝(ㄓ) <span class='highlight'>5</span> 元(ㄩㄢˊ) ， 買(ㄇㄞˇ) <span class='highlight'>9</span> 枝(ㄓ) 要(ㄧㄠˋ) 付(ㄈㄨˋ) 多(ㄉㄨㄛ) 少(ㄕㄠˇ) 元(ㄩㄢˊ) ？", a: 45 },
+            { t: "玩(ㄨㄢˊ) 具(ㄐㄩˋ) 車(ㄔㄜ) <span class='highlight'>6</span> 元(ㄩㄢˊ) ， 買(ㄇㄞˇ) <span class='highlight'>3</span> 輛(ㄌㄧㄤˋ) 要(ㄧㄠˋ) 付(ㄈㄨˋ) 多(ㄉㄨㄛ) 少(ㄕㄠˇ) 元(ㄩㄢˊ) ？", a: 18 },
+            { t: "筆(ㄅㄧˇ) 記(ㄐㄧˋ) 本(ㄅㄣˇ) <span class='highlight'>7</span> 元(ㄩㄢˊ) ， 買(ㄇㄞˇ) <span class='highlight'>4</span> 本(ㄅㄣˇ) 要(ㄧㄠˋ) 付(ㄈㄨˋ) 多(ㄉㄨㄛ) 少(ㄕㄠˇ) 元(ㄩㄢˊ) ？", a: 28 },
+            { t: "冰(ㄅㄧㄥ) 淇(ㄑㄧˊ) 淋(ㄌㄧㄣˊ) <span class='highlight'>8</span> 元(ㄩㄢˊ) ， 買(ㄇㄞˇ) <span class='highlight'>2</span> 支(ㄓ) 要(ㄧㄠˋ) 付(ㄈㄨˋ) 多(ㄉㄨㄛ) 少(ㄕㄠˇ) 元(ㄩㄢˊ) ？", a: 16 },
+            { t: "三(ㄙㄢ) 明(ㄇㄧㄥˊ) 治(ㄓˋ) <span class='highlight'>9</span> 元(ㄩㄢˊ) ， 買(ㄇㄞˇ) <span class='highlight'>6</span> 個(ㄍㄜ˙) 要(ㄧㄠˋ) 付(ㄈㄨˋ) 多(ㄉㄨㄛ) 少(ㄕㄠˇ) 元(ㄩㄢˊ) ？", a: 54 },
+            { t: "尺(ㄔˇ) 一(ㄧˋ) 把(ㄅㄚˇ) <span class='highlight'>5</span> 元(ㄩㄢˊ) ， 買(ㄇㄞˇ) <span class='highlight'>5</span> 把(ㄅㄚˇ) 要(ㄧㄠˋ) 付(ㄈㄨˋ) 多(ㄉㄨㄛ) 少(ㄕㄠˇ) 元(ㄩㄢˊ) ？", a: 25 },
+            { t: "橡(ㄒㄧㄤˋ) 皮(ㄆㄧˊ) 擦(ㄘㄚ) <span class='highlight'>4</span> 元(ㄩㄢˊ) ， 買(ㄇㄞˇ) <span class='highlight'>8</span> 個(ㄍㄜ˙) 要(ㄧㄠˋ) 付(ㄈㄨˋ) 多(ㄉㄨㄛ) 少(ㄕㄠˇ) 元(ㄩㄢˊ) ？", a: 32 }
         ];
 
         // --- 變數 ---
@@ -356,8 +377,6 @@
             startTime: 0,
             timerInterval: null
         };
-
-        // --- 核心流程 ---
 
         function goHome() {
             clearInterval(state.timerInterval);
@@ -377,12 +396,10 @@
         }
 
         function nextQuestion(isUndo) {
-            // 如果不是Undo，先存檔
             if (!isUndo && state.currentQ) {
                 state.history.push({...state.currentQ});
             }
 
-            // 產生新題目
             if (!isUndo) {
                 state.currentQ = generateQuestionData();
             }
@@ -398,6 +415,8 @@
                 const q = storyQuestions[Math.floor(Math.random() * storyQuestions.length)];
                 qText = q.t;
                 qAns = q.a;
+                // 將題目中的(注音)用span包起來，變成灰色小字
+                qText = qText.replace(/\(([^)]+)\)/g, "<span class='zhu'>$1</span>");
             } else {
                 let n1, n2;
                 if (state.targetNum === 0) {
@@ -411,25 +430,18 @@
                 qAns = n1 * n2;
             }
 
-            // 產生干擾選項 (4選1)
             options = generateOptions(qAns);
-
             return { text: qText, ans: qAns, options: options, type: state.mode };
         }
 
         function generateOptions(correctAnswer) {
             let opts = new Set();
             opts.add(correctAnswer);
-
             while(opts.size < 4) {
-                // 產生接近的答案作為干擾
-                let offset = Math.floor(Math.random() * 10) - 5; // -5 ~ +4
+                let offset = Math.floor(Math.random() * 10) - 5; 
                 let wrong = correctAnswer + offset;
-                if (wrong > 0 && wrong !== correctAnswer) {
-                    opts.add(wrong);
-                }
+                if (wrong > 0 && wrong !== correctAnswer) opts.add(wrong);
             }
-            // 轉成陣列並打亂
             return Array.from(opts).sort(() => Math.random() - 0.5);
         }
 
@@ -446,7 +458,7 @@
                     document.getElementById('timer-display').innerText = `⏱️ ${seconds} 秒`;
                 }, 100);
             } else {
-                document.getElementById('timer-display').innerText = "加油！"; // 素養題不給秒數壓力
+                document.getElementById('timer-display').innerText = "閱讀挑戰"; 
             }
         }
 
@@ -459,14 +471,12 @@
             img.src = IMAGES.normal;
             undoBtn.disabled = (state.history.length === 0);
 
-            // 顯示題目
             if (state.currentQ.type === 'story') {
                 qArea.innerHTML = `<div class='story-text'>${state.currentQ.text}</div>`;
             } else {
-                qArea.innerHTML = `<div class='question-box'>${state.currentQ.text}</div>`;
+                qArea.innerHTML = `<div class='question-box-basic'>${state.currentQ.text}</div>`;
             }
 
-            // 顯示按鈕
             optArea.innerHTML = "";
             state.currentQ.options.forEach(opt => {
                 const btn = document.createElement('button');
@@ -478,14 +488,12 @@
         }
 
         function checkAnswer(selectedVal, btnElement) {
-            clearInterval(state.timerInterval); // 停止計時
-            
+            clearInterval(state.timerInterval);
             const timeTaken = ((Date.now() - state.startTime) / 1000).toFixed(1);
             const feedback = document.getElementById('feedback-area');
             const img = document.getElementById('game-img');
 
             if (selectedVal === state.currentQ.ans) {
-                // 答對
                 playSound('correct');
                 btnElement.classList.add('correct-anim');
                 img.src = IMAGES.happy;
@@ -495,18 +503,14 @@
                 } else {
                     feedback.innerText = "好棒喔！答對了！";
                 }
-
-                // 鎖定所有按鈕
-                disableAllButtons();
                 
+                disableAllButtons();
                 setTimeout(() => nextQuestion(false), 1500);
-
             } else {
-                // 答錯
                 playSound('wrong');
                 btnElement.classList.add('wrong-anim');
                 img.src = IMAGES.sad;
-                feedback.innerText = "不對喔，再想一想！";
+                feedback.innerText = "再試試看！";
             }
         }
 
@@ -519,10 +523,10 @@
             if (state.history.length === 0) return;
             const prev = state.history.pop();
             state.currentQ = prev;
-            // 重新計時或重置時間？這裡選擇重置讓小朋友重答
-            nextQuestion(true);
+            renderGame(); // 重繪但不重新計時或可選重置
+            // 這裡簡單處理：回到上一題狀態，允許重答
+            startTimer(); 
         }
-
     </script>
 </body>
 </html>
