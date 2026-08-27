@@ -206,6 +206,25 @@ body {
 }
 .portal-btn:hover { background: rgba(255,255,255,0.14); transform: translateY(-2px); }
 @media (max-width: 480px) { .type-cards { grid-template-columns: 1fr; } .ve-ans,.ve-num,.ve-b { font-size: 1.8rem; } }
+
+/* 觸控與 iPad / 手機全面適配 */
+button, .opt-btn, .start-btn, .next-btn, .nav-btn, .replay-btn, .portal-btn {
+  touch-action: manipulation;
+  -webkit-tap-highlight-color: transparent;
+}
+.opt-btn {
+  min-height: 56px;
+  padding: 16px 12px;
+}
+.device-support-badge {
+  margin-top: 14px;
+  font-size: 0.8rem;
+  color: rgba(255, 255, 255, 0.6);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+}
 </style>
 </head>
 <body>
@@ -245,6 +264,9 @@ body {
       </div>
       <button class="start-btn" id="startBtn">🏰 攻破城堡！開始冒險！</button>
       <p style="margin-top:16px;color:rgba(255,255,255,0.4);font-size:0.8rem;">共 5 關 × 每關 8 題 ｜ 每題 25 秒 ｜ 答對 6/8 才能前進</p>
+      <div class="device-support-badge">
+        📱 支援 iPad / 平板、手機與電腦 ｜ 觸控大按鈕好操作
+      </div>
     </div>
   </div>
 

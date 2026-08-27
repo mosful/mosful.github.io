@@ -134,6 +134,25 @@ body {
 .portal-btn { padding:14px 24px; border-radius:50px; font-family:'Baloo 2','Noto Sans TC',sans-serif; font-size:1rem; font-weight:700; cursor:pointer; background:rgba(255,255,255,0.08); border:1.5px solid rgba(255,255,255,0.2); color:rgba(255,255,255,0.8); text-decoration:none; display:inline-flex; align-items:center; gap:6px; transition:all 0.2s; }
 .portal-btn:hover{background:rgba(255,255,255,0.14);transform:translateY(-2px);}
 @media(max-width:480px){ .formula-grid{grid-template-columns:1fr 1fr;} }
+
+/* 觸控與 iPad / 手機全面適配 */
+button, .opt-btn, .start-btn, .next-btn, .nav-btn, .replay-btn, .portal-btn {
+  touch-action: manipulation;
+  -webkit-tap-highlight-color: transparent;
+}
+.opt-btn {
+  min-height: 56px;
+  padding: 16px 12px;
+}
+.device-support-badge {
+  margin-top: 14px;
+  font-size: 0.8rem;
+  color: rgba(255, 255, 255, 0.6);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+}
 </style>
 </head>
 <body>
@@ -160,6 +179,9 @@ body {
       </div>
       <button class="start-btn" id="startBtn">📏 拿起尺規！開始測量！</button>
       <p style="margin-top:16px;color:rgba(255,255,255,0.4);font-size:0.8rem;">共 4 關 × 每關 8 題 ｜ 每題 25 秒 ｜ 答對 6/8 才能前進</p>
+      <div class="device-support-badge">
+        📱 支援 iPad / 平板、手機與電腦 ｜ 觸控大按鈕好操作
+      </div>
     </div>
   </div>
 

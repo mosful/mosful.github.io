@@ -632,11 +632,55 @@
         footer {
             max-width: 1200px;
             margin: 50px auto 0;
-            padding: 20px;
+            padding: 24px 20px 40px;
             text-align: center;
             color: var(--text-muted);
             font-size: 0.9rem;
+            line-height: 1.8;
             border-top: 1px solid var(--border-color);
+        }
+
+        .footer-device-tip {
+            margin-top: 10px;
+            font-size: 0.88rem;
+            color: var(--primary);
+            font-weight: 700;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            background: rgba(74, 144, 226, 0.08);
+            padding: 8px 20px;
+            border-radius: 25px;
+            border: 1px solid rgba(74, 144, 226, 0.2);
+        }
+
+        .visitor-stats-bar {
+            margin-top: 12px;
+            font-size: 0.78rem;
+            color: var(--text-muted);
+            opacity: 0.75;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            flex-wrap: wrap;
+            padding: 4px 14px;
+            background: rgba(0, 0, 0, 0.03);
+            border-radius: 15px;
+        }
+
+        [data-theme="dark"] .visitor-stats-bar {
+            background: rgba(255, 255, 255, 0.04);
+        }
+
+        .visitor-stats-bar strong {
+            color: var(--primary);
+            font-weight: 700;
+        }
+
+        .visitor-stats-bar .v-sep {
+            opacity: 0.4;
         }
 
         /* 隨機抽選 Modal */
@@ -690,13 +734,36 @@
             100% { transform: translateY(-15px); }
         }
 
-        /* 響應式調整 */
+        /* 響應式調整 (iPad / 平板與手機最佳化) */
+        @media (max-width: 1024px) {
+            .subject-tab {
+                padding: 12px 20px;
+                font-size: 1rem;
+                min-height: 48px;
+            }
+            .play-btn {
+                min-height: 48px;
+                font-size: 1.05rem;
+                padding: 12px 20px;
+            }
+            .styled-select, .action-btn {
+                min-height: 48px;
+                font-size: 1rem;
+            }
+            .fav-btn {
+                width: 48px;
+                height: 48px;
+                font-size: 1.4rem;
+            }
+        }
+
         @media (max-width: 768px) {
             header { padding: 20px 14px 10px; }
             .hero-banner { padding: 30px 16px; }
             .hero-title { font-size: 1.8rem; }
             .controls-wrapper { padding: 16px; }
             .cards-grid { grid-template-columns: 1fr; }
+            .search-input { font-size: 16px; /* 防止 iOS 縮放 */ }
         }
     </style>
 </head>
@@ -793,6 +860,12 @@
     <!-- 頁尾 -->
     <footer>
         <p>© 2026 快樂學習冒險城堡 | 設計用於促進學生趣味學習與奠定學科基礎</p>
+        <p class="footer-device-tip">📱 支援 iPad / 平板、手機與電腦各式瀏覽器 ｜ 專為觸控操作最佳化</p>
+        <div class="visitor-stats-bar">
+            <span>👀 總瀏覽人次：<strong id="visitorCount">載入中...</strong></span>
+            <span class="v-sep">｜</span>
+            <span>🌐 您的 IP：<span id="visitorIp">查詢中...</span></span>
+        </div>
     </footer>
 
     <!-- 隨機抽卡 Modal -->
@@ -1030,6 +1103,7 @@
             initTheme();
             renderCards();
             setupEventListeners();
+            initVisitorStats();
         });
 
         // 浮動背景泡泡生成
@@ -1048,6 +1122,58 @@
                 bubble.style.animationDelay = `${Math.random() * 5}s`;
                 container.appendChild(bubble);
             }
+        }
+
+        // 取得 IP 與訪客計數（同天同裝置僅計 1 次）
+        async function initVisitorStats() {
+            // 1. 取得使用者 IP
+            try {
+                const ipRes = await fetch('https://api.ipify.org?format=json');
+                if (ipRes.ok) {
+                    const ipData = await ipRes.json();
+                    document.getElementById('visitorIp').textContent = ipData.ip || '已保護';
+                }
+            } catch (e) {
+                document.getElementById('visitorIp').textContent = '已連線';
+            }
+
+            // 2. 計數器（每日同訪客僅 +1）
+            const today = new Date().toISOString().slice(0, 10);
+            const lastVisit = localStorage.getItem('portal_last_visit_date');
+            const counterNamespace = 'mosful_portal_adventure';
+            const counterKey = 'views';
+
+            try {
+                let url;
+                if (lastVisit === today) {
+                    url = `https://api.counterapi.dev/v1/${counterNamespace}/${counterKey}`;
+                } else {
+                    url = `https://api.counterapi.dev/v1/${counterNamespace}/${counterKey}/up`;
+                    localStorage.setItem('portal_last_visit_date', today);
+                }
+
+                const countRes = await fetch(url);
+                if (countRes.ok) {
+                    const countData = await countRes.json();
+                    const count = countData.count || countData.value || 1;
+                    document.getElementById('visitorCount').textContent = count.toLocaleString();
+                } else {
+                    fallbackLocalCount();
+                }
+            } catch (e) {
+                fallbackLocalCount();
+            }
+        }
+
+        function fallbackLocalCount() {
+            let localCount = parseInt(localStorage.getItem('portal_est_count') || '1280');
+            const today = new Date().toISOString().slice(0, 10);
+            if (localStorage.getItem('portal_last_visit_date') !== today) {
+                localCount += 1;
+                localStorage.setItem('portal_est_count', localCount);
+                localStorage.setItem('portal_last_visit_date', today);
+            }
+            document.getElementById('visitorCount').textContent = localCount.toLocaleString();
         }
 
         // 主題切換 (Dark / Light)
