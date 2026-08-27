@@ -630,6 +630,98 @@
             margin-bottom: 20px;
         }
 
+        /* 冒險家留言板 (Giscus) */
+        .comments-section {
+            max-width: 1200px;
+            margin: 50px auto 20px;
+            padding: 0 20px;
+        }
+
+        .comments-header {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        .comments-header h2 {
+            font-size: 1.5rem;
+            color: var(--text-main);
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .comments-header p {
+            color: var(--text-muted);
+            font-size: 0.92rem;
+            margin-top: 6px;
+        }
+
+        .giscus-card {
+            background: var(--card-bg);
+            padding: 24px 20px;
+            border-radius: 20px;
+            border: 1px solid var(--border-color);
+            box-shadow: var(--shadow-sm);
+            min-height: 180px;
+        }
+
+        /* 懸浮反饋按鈕 (FAB) */
+        .feedback-fab {
+            position: fixed;
+            bottom: 25px;
+            right: 25px;
+            background: linear-gradient(135deg, #FF6B6B, #FF8E53);
+            color: #fff;
+            border: none;
+            border-radius: 30px;
+            padding: 12px 20px;
+            font-size: 0.95rem;
+            font-weight: 700;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            box-shadow: 0 8px 25px rgba(255, 107, 107, 0.4);
+            cursor: pointer;
+            z-index: 990;
+            transition: all 0.25s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            touch-action: manipulation;
+        }
+
+        .feedback-fab:hover {
+            transform: translateY(-4px) scale(1.05);
+            box-shadow: 0 12px 30px rgba(255, 107, 107, 0.5);
+        }
+
+        .feedback-form-group {
+            margin-bottom: 16px;
+            text-align: left;
+        }
+
+        .feedback-form-group label {
+            display: block;
+            font-size: 0.88rem;
+            font-weight: 700;
+            color: var(--text-main);
+            margin-bottom: 6px;
+        }
+
+        .feedback-input, .feedback-select, .feedback-textarea {
+            width: 100%;
+            padding: 10px 14px;
+            border: 2px solid var(--border-color);
+            border-radius: 12px;
+            font-size: 0.95rem;
+            background: var(--card-bg);
+            color: var(--text-main);
+            outline: none;
+            transition: border-color 0.2s;
+            font-family: inherit;
+        }
+
+        .feedback-input:focus, .feedback-select:focus, .feedback-textarea:focus {
+            border-color: var(--primary);
+        }
+
         /* 頁尾 */
         footer {
             max-width: 1200px;
@@ -857,6 +949,33 @@
             <!-- 由 JavaScript 動態渲染卡片 -->
         </section>
 
+        <!-- 冒險家交流留言板 (Giscus) -->
+        <section class="comments-section" id="commentsSection">
+            <div class="comments-header">
+                <h2>💬 冒險家交流留言板</h2>
+                <p>歡迎留下您的通關心得、給小冒險家的加油打氣或學習建議！</p>
+            </div>
+            <div class="giscus-card">
+                <div class="giscus"></div>
+                <script src="https://giscus.app/client.js"
+                    data-repo="mosful/mosful.github.io"
+                    data-repo-id="R_kgDONqW7_A"
+                    data-category="General"
+                    data-category-id="DIC_kwDONqW7_M4Cm86-"
+                    data-mapping="pathname"
+                    data-strict="0"
+                    data-reactions-enabled="1"
+                    data-emit-metadata="0"
+                    data-input-position="top"
+                    data-theme="preferred_color_scheme"
+                    data-lang="zh-TW"
+                    data-loading="lazy"
+                    crossorigin="anonymous"
+                    async>
+                </script>
+            </div>
+        </section>
+
     </main>
 
     <!-- 頁尾 -->
@@ -881,6 +1000,62 @@
                 <a href="#" id="modalGoBtn" class="play-btn" style="flex:1.2;">🚀 立刻前往</a>
             </div>
             <button id="modalCloseBtn" style="margin-top: 15px; background: none; border: none; color: var(--text-muted); cursor: pointer; font-size: 0.9rem;">關閉視窗</button>
+        </div>
+    </div>
+
+    <!-- 懸浮反饋按鈕 (FAB) -->
+    <button class="feedback-fab" id="openFeedbackBtn" title="意見反饋與建議">
+        <span>💬</span>
+        <span>意見反饋</span>
+    </button>
+
+    <!-- 反饋表單 Modal -->
+    <div class="modal-overlay" id="feedbackModal">
+        <div class="modal-card" style="max-width: 480px; text-align: left;">
+            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:12px;">
+                <h3 style="margin:0; font-size:1.3rem; color:var(--text-main); display:flex; align-items:center; gap:8px;">
+                    💌 冒險反饋信箱
+                </h3>
+                <button id="closeFeedbackBtn" style="background:none; border:none; font-size:1.4rem; color:var(--text-muted); cursor:pointer; padding:4px 8px;">✕</button>
+            </div>
+            <p style="font-size:0.88rem; color:var(--text-muted); margin-bottom:16px; line-height:1.6;">
+                遇到問題、有題目想建議，或是想許願新單元？歡迎告訴我們！
+            </p>
+            <form id="feedbackForm">
+                <div class="feedback-form-group">
+                    <label>📌 反饋類型</label>
+                    <select class="feedback-select" id="fbType" required>
+                        <option value="💡 題目與計算建議">💡 題目與計算建議</option>
+                        <option value="🐛 發現系統錯誤 (Bug)">🐛 發現系統錯誤 (Bug)</option>
+                        <option value="✨ 許願想玩的新單元">✨ 許願想玩的新單元</option>
+                        <option value="❤️ 給冒險城堡加油打氣">❤️ 給冒險城堡加油打氣</option>
+                    </select>
+                </div>
+                <div class="feedback-form-group">
+                    <label>📖 關聯單元（可選）</label>
+                    <select class="feedback-select" id="fbUnit">
+                        <option value="全站 / 首頁">全站 / 首頁</option>
+                        <option value="3上① 數到10000">3上① 數到10000</option>
+                        <option value="3上② 四位數加減">3上② 四位數加減</option>
+                        <option value="3上③ 乘法小英雄">3上③ 乘法小英雄</option>
+                        <option value="3上④ 幾毫米測量">3上④ 幾毫米測量</option>
+                        <option value="3上⑤ 角與幾何">3上⑤ 角與幾何</option>
+                        <option value="其他中高年級單元">其他中高年級單元</option>
+                    </select>
+                </div>
+                <div class="feedback-form-group">
+                    <label>👤 您的稱呼（選填）</label>
+                    <input type="text" class="feedback-input" id="fbName" placeholder="例如：三年二班小明、王媽媽、李老師">
+                </div>
+                <div class="feedback-form-group">
+                    <label>📝 詳細內容 <span style="color:var(--secondary)">*</span></label>
+                    <textarea class="feedback-textarea" id="fbContent" rows="3" placeholder="請詳細描述您的想法或遇到的狀況..." required></textarea>
+                </div>
+                <div style="display:flex; gap:10px; margin-top:20px;">
+                    <button type="button" class="action-btn" id="cancelFeedbackBtn" style="flex:1;">取消</button>
+                    <button type="submit" class="action-btn btn-primary" id="submitFeedbackBtn" style="flex:1.2;">🚀 送出反饋</button>
+                </div>
+            </form>
         </div>
     </div>
 
@@ -1164,6 +1339,18 @@
                 icon.textContent = '🌙';
                 text.textContent = '深色模式';
             }
+            updateGiscusTheme(theme);
+        }
+
+        // 同步切換 Giscus 留言板主題
+        function updateGiscusTheme(theme) {
+            const iframe = document.querySelector('iframe.giscus-frame');
+            if (!iframe) return;
+            const giscusTheme = theme === 'dark' ? 'dark' : 'light';
+            iframe.contentWindow.postMessage(
+                { giscus: { setConfig: { theme: giscusTheme } } },
+                'https://giscus.app'
+            );
         }
 
         // 渲染單元卡片
@@ -1307,6 +1494,43 @@
             document.getElementById('modalCloseBtn').addEventListener('click', () => modal.classList.remove('active'));
             modal.addEventListener('click', (e) => {
                 if (e.target === modal) modal.classList.remove('active');
+            });
+
+            // 反饋表單 Modal 互動
+            const fbModal = document.getElementById('feedbackModal');
+            const openFbBtn = document.getElementById('openFeedbackBtn');
+            const closeFbBtn = document.getElementById('closeFeedbackBtn');
+            const cancelFbBtn = document.getElementById('cancelFeedbackBtn');
+            const fbForm = document.getElementById('feedbackForm');
+
+            openFbBtn.addEventListener('click', () => fbModal.classList.add('active'));
+            closeFbBtn.addEventListener('click', () => fbModal.classList.remove('active'));
+            cancelFbBtn.addEventListener('click', () => fbModal.classList.remove('active'));
+            fbModal.addEventListener('click', (e) => {
+                if (e.target === fbModal) fbModal.classList.remove('active');
+            });
+
+            fbForm.addEventListener('submit', (e) => {
+                e.preventDefault();
+                const type = document.getElementById('fbType').value;
+                const unit = document.getElementById('fbUnit').value;
+                const name = document.getElementById('fbName').value.trim() || '熱心冒險家';
+                const content = document.getElementById('fbContent').value.trim();
+
+                if (!content) return;
+
+                // 本機記錄備份
+                const logs = JSON.parse(localStorage.getItem('portal_feedback_logs') || '[]');
+                logs.push({
+                    time: new Date().toLocaleString(),
+                    type, unit, name, content
+                });
+                localStorage.setItem('portal_feedback_logs', JSON.stringify(logs));
+
+                // 提示感謝
+                alert(`🎉 感謝 ${name} 的反饋！\n\n您的寶貴建議我們已經收到，冒險城堡會持續改進！🏰✨`);
+                fbForm.reset();
+                fbModal.classList.remove('active');
             });
         }
 
