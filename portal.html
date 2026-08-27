@@ -724,7 +724,8 @@
             <h1 class="hero-title">🎮 快樂學習冒險城堡</h1>
             <p class="hero-subtitle">專為國小與國中學生打造的互動式學習遊戲，在闖關冒險中掌握趣味數學與多元科目！</p>
             <div class="stats-pills">
-                <span class="stat-badge">✨ 已上線 5 大冒險單元</span>
+                <span class="stat-badge">✨ 已上線 10 大冒險單元</span>
+                <span class="stat-badge">🎉 3上數學：5 單元全部完成！</span>
                 <span class="stat-badge">🧮 數學科（持續擴充中）</span>
                 <span class="stat-badge">🚀 支援手機/平板與電腦</span>
             </div>
@@ -765,10 +766,10 @@
             <!-- 科目切換 Tabs -->
             <div class="subject-tabs" id="subjectTabs">
                 <button class="subject-tab active" data-subject="all">
-                    <span>🌈</span> 全部科目 <span class="badge-count" id="countAll">5</span>
+                    <span>🌈</span> 全部科目 <span class="badge-count" id="countAll">10</span>
                 </button>
                 <button class="subject-tab" data-subject="math">
-                    <span>🧮</span> 數學科 <span class="badge-count" id="countMath">5</span>
+                    <span>🧮</span> 數學科 <span class="badge-count" id="countMath">10</span>
                 </button>
                 <button class="subject-tab" data-subject="chinese">
                     <span>📖</span> 國語文 <span class="badge-count">規劃中</span>
@@ -889,6 +890,84 @@
                 badgeText: "6上・第③單元",
                 badgeColor: "#283593",
                 description: "搭乘太空船探索小數除法宇宙！用乘以10的魔法征服整數÷小數、小數÷小數，以及四捨五入概數，太空任務等你！",
+                available: true
+            },
+            // =========================================================
+            // 三年級上學期數學單元 (南一版 新超群 數學自修 3上，P.1–P.117)
+            // =========================================================
+            {
+                id: "math3_numbers",
+                title: "數到10000宇宙冒險 ①",
+                subject: "math",
+                grade: "middle",
+                tags: ["萬以內的數", "位值", "數線", "比大小", "3上第①單元"],
+                url: "math3_numbers.html",
+                image: "🌌",
+                isEmoji: true,
+                bgGradient: "linear-gradient(135deg, #DBEAFE 0%, #3B82F6 100%)",
+                badgeText: "3上・第①單元",
+                badgeColor: "#1D4ED8",
+                description: "搭乘宇宙飛船探索萬以內的神秘星球！學習千位、百位、十位、個位的位值觀念，掌握數列順序與大小比較！",
+                available: true
+            },
+            {
+                id: "math3_addition",
+                title: "四位數加減法大挑戰 ②",
+                subject: "math",
+                grade: "middle",
+                tags: ["四位數加法", "四位數減法", "進位借位", "3上第②單元"],
+                url: "math3_addition.html",
+                image: "➕",
+                isEmoji: true,
+                bgGradient: "linear-gradient(135deg, #DCFCE7 0%, #16A34A 100%)",
+                badgeText: "3上・第②單元",
+                badgeColor: "#15803D",
+                description: "挑戰四位數加減法！學習進位加法與借位減法的技巧，解開算術關卡成為萬位數計算小達人！",
+                available: true
+            },
+            {
+                id: "math3_multiplication",
+                title: "乘法小英雄大冒險 ③",
+                subject: "math",
+                grade: "middle",
+                tags: ["乘法", "兩位數乘法", "乘法算式", "積", "3上第③單元"],
+                url: "math3_multiplication.html",
+                image: "✖️",
+                isEmoji: true,
+                bgGradient: "linear-gradient(135deg, #FEF9C3 0%, #EAB308 100%)",
+                badgeText: "3上・第③單元",
+                badgeColor: "#B45309",
+                description: "化身數學小英雄，征服二位數×一位數乘法！學習乘法算式與積的計算，透過闖關冒險提升乘法速算能力！",
+                available: true
+            },
+            {
+                id: "math3_measurement",
+                title: "幾毫米測量小達人 ④",
+                subject: "math",
+                grade: "middle",
+                tags: ["毫米", "長度測量", "公分公尺", "換算", "3上第④單元"],
+                url: "math3_measurement.html",
+                image: "📏",
+                isEmoji: true,
+                bgGradient: "linear-gradient(135deg, #CCFBF1 0%, #0F766E 100%)",
+                badgeText: "3上・第④單元",
+                badgeColor: "#0F766E",
+                description: "拿起尺規成為測量達人！學習毫米的認識，公分與公尺的換算，透過實際測量任務培養長度量感！",
+                available: true
+            },
+            {
+                id: "math3_geometry",
+                title: "角與幾何形狀探索家 ⑤",
+                subject: "math",
+                grade: "middle",
+                tags: ["角", "直角", "正方形", "長方形", "幾何", "3上第⑤單元"],
+                url: "math3_geometry.html",
+                image: "📐",
+                isEmoji: true,
+                bgGradient: "linear-gradient(135deg, #EDE9FE 0%, #7C3AED 100%)",
+                badgeText: "3上・第⑤單元",
+                badgeColor: "#5B21B6",
+                description: "探索角的神奇世界！認識角、直角，以及正方形和長方形的性質，用幾何眼光發現生活中的數學美！",
                 available: true
             },
             // 未來擴充預告單元 (Placeholders for Future Subject Units)
