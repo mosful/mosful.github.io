@@ -8,6 +8,8 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;600;700&family=Noto+Sans+TC:wght@400;500;700;900&display=swap" rel="stylesheet">
+    <!-- 不蒜子雲端去重訪客計數 -->
+    <script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
     <style>
         /* ==========================================
            1. 全域變數與重置 (Variables & Reset)
@@ -862,7 +864,7 @@
         <p>© 2026 快樂學習冒險城堡 | 設計用於促進學生趣味學習與奠定學科基礎</p>
         <p class="footer-device-tip">📱 支援 iPad / 平板、手機與電腦各式瀏覽器 ｜ 專為觸控操作最佳化</p>
         <div class="visitor-stats-bar">
-            <span>👀 總瀏覽人次：<strong id="visitorCount">載入中...</strong></span>
+            <span>👀 總瀏覽人次：<strong id="busuanzi_value_site_uv">載入中...</strong></span>
             <span class="v-sep">｜</span>
             <span>🌐 您的 IP：<span id="visitorIp">查詢中...</span></span>
         </div>
@@ -1103,7 +1105,7 @@
             initTheme();
             renderCards();
             setupEventListeners();
-            initVisitorStats();
+            initVisitorIp();
         });
 
         // 浮動背景泡泡生成
@@ -1124,9 +1126,8 @@
             }
         }
 
-        // 取得 IP 與訪客計數（同天同裝置僅計 1 次）
-        async function initVisitorStats() {
-            // 1. 取得使用者 IP
+        // 取得使用者真實 IP
+        async function initVisitorIp() {
             try {
                 const ipRes = await fetch('https://api.ipify.org?format=json');
                 if (ipRes.ok) {
@@ -1136,44 +1137,6 @@
             } catch (e) {
                 document.getElementById('visitorIp').textContent = '已連線';
             }
-
-            // 2. 計數器（每日同訪客僅 +1）
-            const today = new Date().toISOString().slice(0, 10);
-            const lastVisit = localStorage.getItem('portal_last_visit_date');
-            const counterNamespace = 'mosful_portal_adventure';
-            const counterKey = 'views';
-
-            try {
-                let url;
-                if (lastVisit === today) {
-                    url = `https://api.counterapi.dev/v1/${counterNamespace}/${counterKey}`;
-                } else {
-                    url = `https://api.counterapi.dev/v1/${counterNamespace}/${counterKey}/up`;
-                    localStorage.setItem('portal_last_visit_date', today);
-                }
-
-                const countRes = await fetch(url);
-                if (countRes.ok) {
-                    const countData = await countRes.json();
-                    const count = countData.count || countData.value || 1;
-                    document.getElementById('visitorCount').textContent = count.toLocaleString();
-                } else {
-                    fallbackLocalCount();
-                }
-            } catch (e) {
-                fallbackLocalCount();
-            }
-        }
-
-        function fallbackLocalCount() {
-            let localCount = parseInt(localStorage.getItem('portal_est_count') || '1280');
-            const today = new Date().toISOString().slice(0, 10);
-            if (localStorage.getItem('portal_last_visit_date') !== today) {
-                localCount += 1;
-                localStorage.setItem('portal_est_count', localCount);
-                localStorage.setItem('portal_last_visit_date', today);
-            }
-            document.getElementById('visitorCount').textContent = localCount.toLocaleString();
         }
 
         // 主題切換 (Dark / Light)
